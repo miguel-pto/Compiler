@@ -1,0 +1,12 @@
+def mcd(a : int, b : int) : int as {
+    var r : int;
+    r = a % b;
+    print(r);
+    a = &r;
+    if (r == 0) {
+        return b;
+    }
+    else {
+        return mcd(b, r);
+    }
+}

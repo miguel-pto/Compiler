@@ -1,0 +1,12 @@
+def suma_matrices(& matriz1:array[MAX] de int, & matriz2:array[MAX] de int, n:int, m:int):void as {
+	var i:int;
+	var j:int;
+	while (i < n) {
+		while (j < m) {
+			matriz1[i][j] = matriz1[i][j] + matriz2[i][j];
+			j = j + 1;
+		}
+		i = i + 1;
+		j = 0;
+	}
+}

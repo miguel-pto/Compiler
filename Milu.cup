@@ -1,0 +1,233 @@
+package asint;
+
+import java_cup.runtime.*;
+import alex.AnalizadorLexicoMilu;
+import alex.UnidadLexica;
+import errors.GestionErroresMilu;
+import ast.*;
+import java.util.LinkedList; 
+
+scan with {: return getScanner().next_token(); :};
+parser code {: 
+   private GestionErroresMilu errores;
+   public void syntax_error(Symbol unidadLexica) {
+     errores.errorSintactico((UnidadLexica)unidadLexica);
+   }
+   public int fila(int index) {
+     return ((java_cup.runtime.Symbol)stack.peek()).left;
+   }
+  public int columna(int index) {
+     return ((java_cup.runtime.Symbol)stack.peek()).right;
+   }
+:};
+init with {: 
+   errores = new GestionErroresMilu();
+   AnalizadorLexicoMilu alex = (AnalizadorLexicoMilu)getScanner();
+   alex.fijaGestionErrores(errores);
+:};
+
+
+terminal String AS, COMMA, COLON, SCOLON, IDENTIFICADOR, INTNUM, FLOATNUM, TRUE;
+terminal String SUMA, RESTA, MULT, DIV, MOD, NEG, REF, IGUAL, DISTINTO, MENOR, MAYOR, MENORIGUAL, MAYORIGUAL;
+terminal String AND, OR, PAP, PCIERRE, CAP, CCIERRE, BAP, BCIERRE, ASIG, INT, BOOL, FLOAT, ARRAY, VAR, DEF;
+terminal String IF, ELSE, WHILE, FOR, RETURN, DE, VOID, NEW, STRUCT, PUNTO;// PRINT, READ;
+terminal String FALSE, FREE;
+
+non terminal Nodo S;
+non terminal Nodo B, D, A, WHILE_L, FOR_L, IFCOND, FUNDEC, STRUCTDEC;
+non terminal Nodo E0, E1, E2, E3, E4, E5, E6, E7, LIT;
+non terminal Tipo T, T_FUNCT;
+non terminal LinkedList<Nodo> BLOQUE, DECS, Ds, ELSECOND;
+non terminal LinkedList<Parametro> P; // Lista de parámetros de definición
+non terminal LinkedList<Nodo> P_LLAMADA; // Lista de argumentos de llamada
+non terminal String OP0, OP1, OP2, OP3;
+non terminal String PASO;
+
+S ::= Ds:lista 
+    {: RESULT = new Programa(lista, parser.fila(0), parser.columna(0)); :};
+
+Ds ::= Ds:lista D:d SCOLON    {: lista.add(d); RESULT = lista; :}
+
+    | Ds:lista FUNDEC:f      {: lista.add(f); RESULT = lista; :}
+    | Ds:lista STRUCTDEC:st  {: lista.add(st); RESULT = lista; :}
+    | D:d SCOLON             {: LinkedList<Nodo> l = new LinkedList<>(); l.add(d); RESULT = l; :}
+
+    | FUNDEC:f               {: LinkedList<Nodo> l = new LinkedList<>(); l.add(f); RESULT = l; :}
+    | STRUCTDEC:st           {: LinkedList<Nodo> l = new LinkedList<>(); l.add(st); RESULT = l; :};
+
+BLOQUE ::= BLOQUE:lista B:i 
+           {: lista.add(i); RESULT = lista; :}
+         | B:i 
+           {: LinkedList<Nodo> l = new LinkedList<>(); l.add(i); RESULT = l; :};
+
+
+//bloque de codigo
+B ::= D:d SCOLON          {: RESULT = d; :}
+    | A:a SCOLON          {: RESULT = a; :}
+    | WHILE_L:w           {: RESULT = w; :}
+    | FOR_L:f             {: RESULT = f; :}
+    | IFCOND:i            {: RESULT = i; :}
+    | FREE PAP E0:e PCIERRE SCOLON {: RESULT = new InstFree((Expresion)e,parser.fila(0), parser.columna(0)); :}
+    | IDENTIFICADOR:id PAP P_LLAMADA:args PCIERRE SCOLON {: RESULT = new InstLlamadaFuncion(id, args, parser.fila(0), parser.columna(0)); :}
+    | RETURN E0:e SCOLON  {: RESULT = new InstReturn(e, parser.fila(0), parser.columna(0)); :};
+
+D ::= VAR IDENTIFICADOR:id COLON T:t
+      {: RESULT = new DeclaracionVariable(id, t, null, parser.fila(0), parser.columna(0)); :}
+    | VAR IDENTIFICADOR:id COLON T:t ASIG E0:exp
+      {: RESULT = new DeclaracionVariable(id, t, exp, parser.fila(0), parser.columna(0)); :};
+
+A ::= E5:d ASIG E0:exp 
+      {: RESULT = new InstAsignacion((Designador)d, exp, parser.fila(0), parser.columna(0)); :};
+
+
+//funciones
+FUNDEC ::= DEF IDENTIFICADOR:id PAP P:params PCIERRE COLON T_FUNCT:ret AS BAP BLOQUE:bloque BCIERRE
+    {:  RESULT = new DeclaracionFuncion(id, params, ret, bloque, parser.fila(0), parser.columna(0)); :};
+
+P ::= PASO:p IDENTIFICADOR:id COLON T:t COMMA P:lista
+      {: lista.addFirst(new Parametro(id, t, p != null, parser.fila(0), parser.columna(0))); RESULT = lista; :}
+
+    | PASO:p IDENTIFICADOR:id COLON T:t
+      {: LinkedList<Parametro> l = new LinkedList<>(); l.add(new Parametro(id, t, p != null, parser.fila(0), parser.columna(0))); RESULT = l; :}
+    | /* vacio */
+      {: RESULT = new LinkedList<Parametro>(); :};
+
+PASO ::= REF {: RESULT = "&"; :} | {: RESULT = null; :};
+
+P_LLAMADA ::= E0:e COMMA P_LLAMADA:lista 
+              {: lista.addFirst(e); RESULT = lista; :}
+
+            | E0:e                       
+              {: LinkedList<Nodo> l = new LinkedList<>(); l.add(e); RESULT = l; :}
+            | /* vacio */                
+              {: RESULT = new LinkedList<Nodo>(); :};
+
+
+//Tipos
+T ::= INT:i           {: RESULT = new TipoInt(parser.fila(0), parser.columna(0)); :}
+
+    | FLOAT:f         {: RESULT = new TipoFloat(parser.fila(0), parser.columna(0)); :}
+    | BOOL:b          {: RESULT = new TipoBool(parser.fila(0), parser.columna(0)); :}
+    | ARRAY CAP E2:e CCIERRE DE T:t 
+                      {: RESULT = new TipoArray(e, t, parser.fila(0), parser.columna(0)); :}
+    | MULT T:t        {: RESULT = new TipoPuntero(t, parser.fila(0), parser.columna(0)); :}
+    | IDENTIFICADOR:id 
+                      {: RESULT = new TipoStruct(id, parser.fila(0), parser.columna(0)); :};
+
+T_FUNCT ::= T:t       {: RESULT = t; :}
+          | VOID:v    {: RESULT = new TipoVoid(parser.fila(0), parser.columna(0)); :};
+
+//structs
+STRUCTDEC ::= STRUCT IDENTIFICADOR:id COLON BAP DECS:lista BCIERRE
+    {:  RESULT = new DeclaracionStruct(id, lista, parser.fila(0), parser.columna(0)); :};
+
+DECS ::= D:dec SCOLON DECS:lista 
+         {: lista.addFirst(dec); RESULT = lista; :}
+       | /* vacio */ 
+         {: RESULT = new LinkedList<Nodo>(); :};
+
+
+//while
+WHILE_L ::= WHILE:w PAP E0:cond PCIERRE BAP BLOQUE:bloque BCIERRE
+    {:  RESULT = new InstWhile(cond, bloque, parser.fila(0), parser.columna(0)); :};
+
+//for
+FOR_L ::= FOR:f PAP A:ini SCOLON E0:cond SCOLON A:iter PCIERRE BAP BLOQUE:bloque BCIERRE
+    {:  RESULT = new InstFor(ini, cond, iter, bloque, parser.fila(0), parser.columna(0)); :};
+
+
+//Condicional
+IFCOND ::= IF PAP E0:cond PCIERRE BAP BLOQUE:si BCIERRE ELSECOND:sino
+    {:        RESULT = new InstIf(cond, si, sino, parser.fila(0), parser.columna(0)); :};
+
+ELSECOND ::= ELSE BAP BLOQUE:lista BCIERRE 
+             {: RESULT = lista; :}
+           | /* vacio */ 
+             {: RESULT = null; :};
+
+
+//Expresiones y operadores
+
+// E0: Operador OR
+E0 ::= E1:i OR E0:d     {: RESULT = new ExpBinaria(i, d, "||", parser.fila(0), parser.columna(0)); :}
+
+     | E1:e             {: RESULT = e; :};
+
+// E1: Operador AND 
+E1 ::= E1:i AND E2:d    {: RESULT = new ExpBinaria(i, d, "&&", parser.fila(0), parser.columna(0)); :}
+     | E2:e             {: RESULT = e; :};
+
+// E2: Comparación 
+E2 ::= E3:i OP0:op E3:d {: RESULT = new ExpBinaria(i, d, op, parser.fila(0), parser.columna(0)); :}
+
+     | E3:e             {: RESULT = e; :};
+
+// E3: Suma y Resta 
+E3 ::= E3:i OP1:op E4:d {: RESULT = new ExpBinaria(i, d, op, parser.fila(0), parser.columna(0)); :}
+     | E4:e             {: RESULT = e; :};
+
+// E4: Multiplicación, División y Módulo
+E4 ::= E4:i OP2:op E5:d {: RESULT = new ExpBinaria(i, d, op, parser.fila(0), parser.columna(0)); :}
+
+     | E5:e             {: RESULT = e; :};
+
+// E5: Unarios
+E5 ::= OP3:op E5:e  
+      {: 
+         if (op.equals("&")) {
+            RESULT = new ExpReferencia(e, parser.fila(0), parser.columna(0));
+         } else {
+            RESULT = new ExpUnaria(e, op, parser.fila(0), parser.columna(0)); 
+         }
+      :}
+
+     | MULT E5:e  
+      {: RESULT = new DesignadorPuntero(e, parser.fila(0), parser.columna(0)); :}
+     | E6:e {: RESULT = e; :};
+
+// E6: Accesos
+E6 ::= E6:d CAP E0:idx CCIERRE 
+       {: RESULT = new DesignadorArray((Designador)d, idx, parser.fila(0), parser.columna(0)); :} 
+
+     | E6:d PUNTO IDENTIFICADOR:campo 
+       {: RESULT = new DesignadorCampo((Designador)d, campo, parser.fila(0), parser.columna(0)); :}
+     | E7:e {: RESULT = e; :};
+
+// E7: Basicos
+E7 ::= LIT:l            {: RESULT = l; :}
+
+     | IDENTIFICADOR:id {: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :}
+     | PAP E0:e PCIERRE {: RESULT = e; :}
+     | NEW T:t          {: RESULT = new ExpNew(t, parser.fila(0), parser.columna(0)); :}
+     | IDENTIFICADOR:id PAP P_LLAMADA:args PCIERRE 
+       {: RESULT = new ExpLlamadaFuncion(id, args, parser.fila(0), parser.columna(0)); :};
+
+
+LIT ::= INTNUM:n        {: RESULT = new ExpLiteral(n, "int", parser.fila(0), parser.columna(0)); :}
+
+      | FLOATNUM:f      {: RESULT = new ExpLiteral(f, "float", parser.fila(0), parser.columna(0)); :}
+      | TRUE:t          {: RESULT = new ExpLiteral("true", "bool", parser.fila(0), parser.columna(0)); :}
+      | FALSE:f         {: RESULT = new ExpLiteral("false", "bool", parser.fila(0), parser.columna(0)); :};
+
+//Operadores
+OP0 ::= IGUAL      {: RESULT = "=="; :} 
+
+      | DISTINTO   {: RESULT = "!="; :} 
+      | MENOR      {: RESULT = "<"; :} 
+      | MAYOR      {: RESULT = ">"; :} 
+
+      | MENORIGUAL {: RESULT = "<="; :} 
+      | MAYORIGUAL {: RESULT = ">="; :};
+
+OP1 ::= SUMA       {: RESULT = "+"; :} 
+
+      | RESTA      {: RESULT = "-"; :};
+
+OP2 ::= MULT       {: RESULT = "*"; :} 
+      | DIV        {: RESULT = "/"; :} 
+      | MOD        {: RESULT = "%"; :};
+
+OP3 ::= NEG        {: RESULT = "!"; :} 
+
+      | RESTA      {: RESULT = "-"; :} 
+      | REF        {: RESULT = "&"; :};

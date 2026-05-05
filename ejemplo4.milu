@@ -1,0 +1,15 @@
+var res : bool;
+var a:bool; var b:bool; var c:bool; var d:bool; var e:int; var f:int; var g:int;
+
+def main() : void as {
+    res = a || b || c && d == e + f * g;
+    res = a && b && c;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+struct Item : {
+    var id : int;
+    var precio : int;
+    var sig : * Item;
+}
+
+var inventario : array[10] de * Item;
+var total_elementos : int;
+
+def crear_item(& it : * Item, codigo : int, valor : int) : void as {
+    it = new Item;
+    (*it).id = codigo;
+    (*it).precio = valor;
+    (*it).sig = new Item; 
+}
+
+def sumar_precios(& it1 : Item, & it2 : Item) : int as {
+    var suma : int;
+    suma = it1.precio + it2.precio;
+    return suma;
+}
+
+def main() : void as {
+    var p1 : * Item;
+    var p2 : * Item;
+    var r : int;
+    var i : int;
+    crear_item(inventario[0], 101, 25);
+    crear_item(inventario[1], 102, 50);
+    p1 = inventario[0];
+    p2 = inventario[1];
+    r = sumar_precios(*p1, *p2);
+    if (r > 60 && (*p1).id != 0) {
+        (*p1).precio = r;
+    } else {
+        (*p2).precio = 0;
+    }
+    free(p1);
+    free(p2);
+}
+
+
