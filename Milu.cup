@@ -30,10 +30,11 @@ init with {:
 terminal String AS, COMMA, COLON, SCOLON, IDENTIFICADOR, INTNUM, FLOATNUM, TRUE;
 terminal String SUMA, RESTA, MULT, DIV, MOD, NEG, REF, IGUAL, DISTINTO, MENOR, MAYOR, MENORIGUAL, MAYORIGUAL;
 terminal String AND, OR, PAP, PCIERRE, CAP, CCIERRE, BAP, BCIERRE, ASIG, INT, BOOL, FLOAT, ARRAY, VAR, DEF;
-terminal String IF, ELSE, WHILE, FOR, RETURN, DE, VOID, NEW, STRUCT, PUNTO;// PRINT, READ;
+terminal String IF, ELSE, WHILE, FOR, RETURN, DE, VOID, NEW, STRUCT, PUNTO, PRINT, READ;
 terminal String FALSE, FREE;
 
 non terminal Nodo S;
+non terminal Nodo ACCESO, ACCESO_PUNTERO, ACCESO_SIMPLE;
 non terminal Nodo B, D, A, WHILE_L, FOR_L, IFCOND, FUNDEC, STRUCTDEC;
 non terminal Nodo E0, E1, E2, E3, E4, E5, E6, E7, LIT;
 non terminal Tipo T, T_FUNCT;
@@ -67,6 +68,8 @@ B ::= D:d SCOLON          {: RESULT = d; :}
     | WHILE_L:w           {: RESULT = w; :}
     | FOR_L:f             {: RESULT = f; :}
     | IFCOND:i            {: RESULT = i; :}
+    | PRINT E0:e SCOLON   {: RESULT = new InstPrint(e, parser.fila(0), parser.columna(0)); :}
+    | READ ACCESO:a SCOLON {: RESULT = new InstRead((Designador)a, parser.fila(0), parser.columna(0)); :}
     | FREE PAP E0:e PCIERRE SCOLON {: RESULT = new InstFree((Expresion)e,parser.fila(0), parser.columna(0)); :}
     | IDENTIFICADOR:id PAP P_LLAMADA:args PCIERRE SCOLON {: RESULT = new InstLlamadaFuncion(id, args, parser.fila(0), parser.columna(0)); :}
     | RETURN E0:e SCOLON  {: RESULT = new InstReturn(e, parser.fila(0), parser.columna(0)); :};
@@ -76,8 +79,25 @@ D ::= VAR IDENTIFICADOR:id COLON T:t
     | VAR IDENTIFICADOR:id COLON T:t ASIG E0:exp
       {: RESULT = new DeclaracionVariable(id, t, exp, parser.fila(0), parser.columna(0)); :};
 
-A ::= E5:d ASIG E0:exp 
+A ::= ACCESO:d ASIG E0:exp 
       {: RESULT = new InstAsignacion((Designador)d, exp, parser.fila(0), parser.columna(0)); :};
+
+ACCESO ::= ACCESO:a CAP E0:idx CCIERRE 
+           {: RESULT = new DesignadorArray((Designador)a, idx, parser.fila(0), parser.columna(0)); :}
+         | ACCESO:a PUNTO IDENTIFICADOR:id 
+           {: RESULT = new DesignadorCampo((Designador)a, id, parser.fila(0), parser.columna(0)); :}
+         | ACCESO_PUNTERO:a 
+           {: RESULT = a; :};
+
+ACCESO_PUNTERO ::= MULT ACCESO_PUNTERO:a 
+                   {: RESULT = new DesignadorPuntero(a, parser.fila(0), parser.columna(0)); :}
+
+                 | ACCESO_SIMPLE:a 
+                   {: RESULT = a; :};
+
+ACCESO_SIMPLE ::= IDENTIFICADOR:id 
+                  {: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :};
+
 
 
 //funciones
@@ -173,30 +193,16 @@ E4 ::= E4:i OP2:op E5:d {: RESULT = new ExpBinaria(i, d, op, parser.fila(0), par
 
 // E5: Unarios
 E5 ::= OP3:op E5:e  
-      {: 
-         if (op.equals("&")) {
-            RESULT = new ExpReferencia(e, parser.fila(0), parser.columna(0));
-         } else {
-            RESULT = new ExpUnaria(e, op, parser.fila(0), parser.columna(0)); 
-         }
-      :}
+       {: RESULT = new ExpUnaria(e, op, parser.fila(0), parser.columna(0)); :}
 
-     | MULT E5:e  
-      {: RESULT = new DesignadorPuntero(e, parser.fila(0), parser.columna(0)); :}
      | E6:e {: RESULT = e; :};
 
-// E6: Accesos
-E6 ::= E6:d CAP E0:idx CCIERRE 
-       {: RESULT = new DesignadorArray((Designador)d, idx, parser.fila(0), parser.columna(0)); :} 
+E6 ::= ACCESO:a {: RESULT = a; :} 
+     | E7:e      {: RESULT = e; :};
 
-     | E6:d PUNTO IDENTIFICADOR:campo 
-       {: RESULT = new DesignadorCampo((Designador)d, campo, parser.fila(0), parser.columna(0)); :}
-     | E7:e {: RESULT = e; :};
-
-// E7: Basicos
+// E7: Cosas que NO son una dirección de memoria
 E7 ::= LIT:l            {: RESULT = l; :}
 
-     | IDENTIFICADOR:id {: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :}
      | PAP E0:e PCIERRE {: RESULT = e; :}
      | NEW T:t          {: RESULT = new ExpNew(t, parser.fila(0), parser.columna(0)); :}
      | IDENTIFICADOR:id PAP P_LLAMADA:args PCIERRE 

@@ -9,9 +9,9 @@ var total_elementos : int;
 
 def crear_item(& it : * Item, codigo : int, valor : int) : void as {
     it = new Item;
-    (*it).id = codigo;
-    (*it).precio = valor;
-    (*it).sig = new Item; 
+    *it.id = codigo;
+    *it.precio = valor;
+    *it.sig = new Item; 
 }
 
 def sumar_precios(& it1 : Item, & it2 : Item) : int as {
@@ -30,10 +30,10 @@ def main() : void as {
     p1 = inventario[0];
     p2 = inventario[1];
     r = sumar_precios(*p1, *p2);
-    if (r > 60 && (*p1).id != 0) {
-        (*p1).precio = r;
+    if (r > 60 && *p1.id != 0) {
+        *p1.precio = r;
     } else {
-        (*p2).precio = 0;
+        *p2.precio = 0;
     }
     free(p1);
     free(p2);
