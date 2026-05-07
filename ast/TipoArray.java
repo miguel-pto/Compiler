@@ -10,6 +10,17 @@ public class TipoArray extends Tipo {
         this.tipo = t;
     }
 
+    @Override
+    public TipoKind tipoKind() {
+        return TipoKind.ARRAY;
+    }
+
+    @Override
+    public void vincular() {
+        if (tam != null) tam.vincular();
+        if (tipo != null) tipo.vincular();
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── TipoArray:");
         System.out.println(indent + "| └── Tamaño:");

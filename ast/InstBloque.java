@@ -8,7 +8,21 @@ public class InstBloque extends Instruccion {
         super(f, c);
         this.instrucciones = lista;
     }
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.INSTRUCCION;
+    }
 
+    @Override
+    public void vincular() {
+        vinculador.abreBloque();
+        if (instrucciones != null) {
+            for (Nodo instr : instrucciones) {
+                instr.vincular();
+            }
+        }
+        vinculador.cierraBloque();
+    }
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstBloque:");
         for (Nodo instr : instrucciones) {

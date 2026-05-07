@@ -12,6 +12,23 @@ public class DeclaracionVariable extends Instruccion {
         this.valorInicial = v;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.DECLARACION;
+    }
+
+    @Override
+    public void vincular() {
+        if (tipo != null) {
+            tipo.vincular();
+        }
+        if (valorInicial != null) {
+            valorInicial.vincular();
+        }
+        vinculador.insertaId(id, this);
+    }
+
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── DeclaracionVariable: " + id);
         System.out.println(indent + "| └── Tipo: " + tipo);

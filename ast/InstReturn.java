@@ -8,6 +8,18 @@ public class InstReturn extends Instruccion {
         this.valor = v;
     }
 
+        @Override
+    public NodeKind nodeKind() {
+        return NodeKind.INSTRUCCION;
+    }
+
+    @Override
+    public void vincular() {
+        if (valor != null) {
+            valor.vincular();
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstReturn:");
         if (valor != null) {

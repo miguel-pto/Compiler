@@ -15,6 +15,30 @@ public class InstFor extends Instruccion {
         this.cuerpo = body;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.INSTRUCCION;
+    }
+
+    @Override
+    public void vincular() {
+        vinculador.abreBloque();
+        if (ini != null) {
+            ini.vincular();
+        }
+        if (cond != null) {
+            cond.vincular();
+        }
+        if (iteracion != null) {
+            iteracion.vincular();
+        }
+        if (cuerpo != null) {
+            for (Nodo instr : cuerpo) {
+                instr.vincular();
+            }
+        }
+        vinculador.cierraBloque();
+    }
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstFor:");
         System.out.println(indent + "| └── Inicializacion:");

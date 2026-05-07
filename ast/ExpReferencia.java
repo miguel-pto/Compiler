@@ -8,6 +8,18 @@ public class ExpReferencia extends Nodo {
         this.designador = d;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.EXPRESION;
+    }
+
+    @Override
+    public void vincular() {
+        if (designador != null) {
+            designador.vincular();
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── ExpReferencia:");
         System.out.println(indent + "| └── Designador:");

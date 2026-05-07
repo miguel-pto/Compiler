@@ -15,6 +15,25 @@ public class DeclaracionFuncion extends Instruccion {
         this.cuerpo = body;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.FUNCION;
+    }
+
+    @Override
+    public void vincular() {
+        vinculador.insertaId(nombre, this);
+        vinculador.abreBloque();
+        if (tipo != null) tipo.vincular();
+        for (Parametro p : parametros) {
+            p.vincular();
+        }
+        for (Nodo instr : cuerpo) {
+            instr.vincular();
+        }
+        vinculador.cierraBloque();
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── DeclaracionFuncion: " + nombre);
         System.out.println(indent + "| └── Tipo: ");

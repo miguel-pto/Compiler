@@ -1,4 +1,4 @@
-def suma_matrices(& matriz1:array[MAX] de int, & matriz2:array[MAX] de int, n:int, m:int):void as {
+def suma_matrices(& matriz1:array[5] de int, & matriz2:array[5] de int, n:int, m:int):void as {
 	var i:int;
 	var j:int;
 	while (i < n) {

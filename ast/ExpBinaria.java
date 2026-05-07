@@ -7,6 +7,21 @@ public class ExpBinaria extends Expresion {
         super(f, c); this.izq = i; this.der = d; this.op = o;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.EXPRESION;
+    }
+
+    @Override
+    public void vincular() {
+        if (izq != null) {
+            izq.vincular();
+        }
+        if (der != null) {
+            der.vincular();
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── ExpBinaria: " + op);
         System.out.println(indent + "| └── Izquierda:");

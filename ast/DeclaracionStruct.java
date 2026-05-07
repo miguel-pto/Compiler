@@ -11,6 +11,23 @@ public class DeclaracionStruct extends Instruccion {
         this.campos = lista;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.DECLARACION;
+    }
+
+    @Override
+    public void vincular() {
+        vinculador.insertaId(nombre, this);
+        vinculador.abreBloque();
+
+        if (campos != null) {
+            for (Nodo campo : campos) {
+                campo.vincular();
+            }
+        }
+        vinculador.cierraBloque();
+    }
     public void imprimir(String indent) {
         System.out.println(indent + "└── DeclaracionStruct: " + nombre);
         System.out.println(indent + "| └── Campos:");

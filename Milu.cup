@@ -68,8 +68,8 @@ B ::= D:d SCOLON          {: RESULT = d; :}
     | WHILE_L:w           {: RESULT = w; :}
     | FOR_L:f             {: RESULT = f; :}
     | IFCOND:i            {: RESULT = i; :}
-    | PRINT E0:e SCOLON   {: RESULT = new InstPrint(e, parser.fila(0), parser.columna(0)); :}
-    | READ ACCESO:a SCOLON {: RESULT = new InstRead((Designador)a, parser.fila(0), parser.columna(0)); :}
+    | PRINT PAP E0:e PCIERRE SCOLON   {: RESULT = new InstPrint(e, parser.fila(0), parser.columna(0)); :}
+    | READ PAP ACCESO:a PCIERRE SCOLON {: RESULT = new InstRead((Designador)a, parser.fila(0), parser.columna(0)); :}
     | FREE PAP E0:e PCIERRE SCOLON {: RESULT = new InstFree((Expresion)e,parser.fila(0), parser.columna(0)); :}
     | IDENTIFICADOR:id PAP P_LLAMADA:args PCIERRE SCOLON {: RESULT = new InstLlamadaFuncion(id, args, parser.fila(0), parser.columna(0)); :}
     | RETURN E0:e SCOLON  {: RESULT = new InstReturn(e, parser.fila(0), parser.columna(0)); :};
@@ -209,11 +209,18 @@ E7 ::= LIT:l            {: RESULT = l; :}
        {: RESULT = new ExpLlamadaFuncion(id, args, parser.fila(0), parser.columna(0)); :};
 
 
-LIT ::= INTNUM:n        {: RESULT = new ExpLiteral(n, "int", parser.fila(0), parser.columna(0)); :}
+LIT ::= INTNUM:n        
+        {: RESULT = new ExpLiteral(n, new TipoInt(parser.fila(0), parser.columna(0)), parser.fila(0), parser.columna(0)); :}
 
-      | FLOATNUM:f      {: RESULT = new ExpLiteral(f, "float", parser.fila(0), parser.columna(0)); :}
-      | TRUE:t          {: RESULT = new ExpLiteral("true", "bool", parser.fila(0), parser.columna(0)); :}
-      | FALSE:f         {: RESULT = new ExpLiteral("false", "bool", parser.fila(0), parser.columna(0)); :};
+      | FLOATNUM:f      
+        {: RESULT = new ExpLiteral(f, new TipoFloat(parser.fila(0), parser.columna(0)), parser.fila(0), parser.columna(0)); :}
+
+      | TRUE:t          
+        {: RESULT = new ExpLiteral("true", new TipoBool(parser.fila(0), parser.columna(0)), parser.fila(0), parser.columna(0)); :}
+
+      | FALSE:f         
+        {: RESULT = new ExpLiteral("false", new TipoBool(parser.fila(0), parser.columna(0)), parser.fila(0), parser.columna(0)); :};
+
 
 //Operadores
 OP0 ::= IGUAL      {: RESULT = "=="; :} 

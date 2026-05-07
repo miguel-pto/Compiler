@@ -8,6 +8,18 @@ public class DesignadorPuntero extends Designador {
         this.puntero = p; 
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.DESIGNADOR;
+    }
+
+    @Override
+    public void vincular() {
+        if (puntero != null) {
+            puntero.vincular();
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── DesignadorPuntero:");
         System.out.println(indent + "| └── Puntero:");

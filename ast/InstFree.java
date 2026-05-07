@@ -9,6 +9,18 @@ public class InstFree extends Instruccion {
     }
 
     @Override
+    public NodeKind nodeKind() {
+        return NodeKind.INSTRUCCION;
+    }
+
+    @Override
+    public void vincular() {
+        if (puntero != null) {
+            puntero.vincular();
+        }
+    }
+
+    @Override
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstFree:");
         System.out.println(indent + "| └── Puntero:");

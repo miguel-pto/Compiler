@@ -8,12 +8,24 @@ public class Programa extends Nodo {
     public Programa(LinkedList<Nodo> instrucciones, int fila, int col) {
         super(fila, col);
         this.instrucciones = instrucciones;
+        vinculador = new Vinculacion();
     }
 
-    public LinkedList<Nodo> getInstrucciones() {
-        return instrucciones;
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.PROGRAMA;
     }
 
+    @Override
+    public void vincular() {
+        vinculador.abreBloque();
+        for (Nodo i : instrucciones) {
+            if (i != null) {
+                i.vincular(); 
+            }
+        }
+        vinculador.cierraBloque();
+    }
     @Override
     public void imprimir(String indent) {
         System.out.println(indent + "Programa:");

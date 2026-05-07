@@ -12,6 +12,19 @@ public class Parametro extends Nodo {
         this.porReferencia = ref;
     }
 
+    @Override
+    public NodeKind nodeKind() {
+        return NodeKind.DECLARACION;
+    }
+
+    @Override
+    public void vincular() {
+        if (tipo != null) {
+            tipo.vincular();
+        }
+        vinculador.insertaId(id, this);
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── Parametro: " + id);
         System.out.println(indent + "| └── Tipo: ");
