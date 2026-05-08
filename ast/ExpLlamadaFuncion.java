@@ -1,6 +1,8 @@
 package ast;
 import java.util.List;
 
+import asint.Main;
+
 public class ExpLlamadaFuncion extends Nodo {
     public String idFunc;
     public List<Nodo> argumentos;
@@ -25,7 +27,7 @@ public class ExpLlamadaFuncion extends Nodo {
             if (def instanceof DeclaracionFuncion) {
                 this.definicion = (DeclaracionFuncion) def;
             } else {
-                System.err.println("[" + fila() + ":" + col() + "] Error Semántico: '" + idFunc + "' no es una función.");
+                Main.gestor.errorSemantico(this.fila(), this.col(), "'" + idFunc + "' no es una función.");
                 Vinculacion.hayErrorSemantico = true;
             }
         }
@@ -34,6 +36,37 @@ public class ExpLlamadaFuncion extends Nodo {
             for (Nodo arg : argumentos) {
                 arg.vincular();
             }
+        }
+    }
+
+        @Override
+    public void simplifica() {
+        if (argumentos != null) {
+            for (Nodo arg : argumentos) arg.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (argumentos != null) {
+            for (Nodo arg : argumentos) arg.chequea();
+        }
+
+        if (definicion != null) {
+            if (argumentos.size() != definicion.parametros.size()) {
+                Main.gestor.errorSemantico(this.fila(), this.col(), "Número de parámetros incorrecto.");
+            } else {
+                for (int i = 0; i < argumentos.size(); i++) {
+                    Nodo arg = argumentos.get(i);
+                    Parametro p = definicion.parametros.get(i);
+                    if (arg.getTipo() != null && p.tipo != null) {
+                        if (!p.tipo.equals(arg.getTipo())) {
+                            Main.gestor.errorSemantico(this.fila(), this.col(), "Tipo de argumento incompatible.");
+                        }
+                    }
+                }
+            }
+            this.setTipo(definicion.tipoRetorno);
         }
     }
 

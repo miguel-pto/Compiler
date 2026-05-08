@@ -86,6 +86,8 @@ new = new
 true = true
 false = false
 free = free
+print = print
+read = read
 identificador = ({letra} | \_)({letra} | {digito} | \_)*
 
 %%
@@ -110,6 +112,8 @@ identificador = ({letra} | \_)({letra} | {digito} | \_)*
 {true}          {return ops.unidadTrue();}
 {false}         {return ops.unidadFalse();}
 {free}          {return ops.unidadFree();}
+{print}         {return ops.unidadPrint();}
+{read}          {return ops.unidadRead();}
 {suma}          {return ops.unidadSuma();}
 {resta}         {return ops.unidadResta();}
 {mult}          {return ops.unidadMult();}

@@ -20,6 +20,22 @@ public class ExpNew extends Nodo {
         }
     }
 
+
+    @Override
+    public void simplifica() {
+        if (tipoReservado != null) {
+            tipoReservado.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (tipoReservado != null) {
+            tipoReservado.chequea();
+            this.setTipo(new TipoPuntero(tipoReservado, fila(), col()));
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── ExpNew:");
         System.out.println(indent + "| └── Tipo Reservado:");

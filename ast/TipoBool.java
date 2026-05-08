@@ -18,4 +18,15 @@ public class TipoBool extends Tipo {
     public void vincular() {
         
     }
+
+    @Override
+    public void simplifica() {
+
+    }
+
+    @Override
+    public void chequea() {
+
+    }
+
 }

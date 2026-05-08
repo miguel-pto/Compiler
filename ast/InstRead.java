@@ -1,5 +1,7 @@
 package ast;
 
+import asint.Main;
+
 public class InstRead extends Instruccion {
     public Designador destino;
 
@@ -17,6 +19,26 @@ public class InstRead extends Instruccion {
     public void vincular() {
         if (destino != null) {
             destino.vincular();
+        }
+    }
+
+    @Override
+    public void simplifica() {
+        if (destino != null) {
+            destino.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (destino != null) {
+            destino.chequea();
+            if (destino.getTipo() != null) {
+                TipoKind kind = destino.getTipo().tipoKind();
+                if (kind != TipoKind.INT && kind != TipoKind.FLOAT && kind != TipoKind.BOOL) {
+                    Main.gestor.errorSemantico(this.fila(), this.col(), "No se puede leer un valor de tipo " + kind + ".");
+                }
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 package ast;
 
+import asint.Main;
+
 public class InstPrint extends Instruccion {
     public Nodo expresion;
 
@@ -17,6 +19,26 @@ public class InstPrint extends Instruccion {
     public void vincular() {
         if (expresion != null) {
             expresion.vincular();
+        }
+    }
+
+        @Override
+    public void simplifica() {
+        if (expresion != null) {
+            expresion.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (expresion != null) {
+            expresion.chequea();
+            if (expresion.getTipo() != null) {
+                TipoKind kind = expresion.getTipo().tipoKind();
+                if (kind == TipoKind.ARRAY || kind == TipoKind.STRUCT || kind == TipoKind.VOID) {
+                    Main.gestor.errorSemantico(this.fila(), this.col(), "No se puede imprimir un valor de tipo " + kind + ".");
+                }
+            }
         }
     }
 

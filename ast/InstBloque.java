@@ -23,6 +23,25 @@ public class InstBloque extends Instruccion {
         }
         vinculador.cierraBloque();
     }
+
+    @Override
+    public void simplifica() {
+        if (instrucciones != null) {
+            for (Nodo instr : instrucciones) {
+                instr.simplifica();
+            }
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (instrucciones != null) {
+            for (Nodo instr : instrucciones) {
+                instr.chequea();
+            }
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstBloque:");
         for (Nodo instr : instrucciones) {

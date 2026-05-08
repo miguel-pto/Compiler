@@ -14,10 +14,10 @@ parser code {:
      errores.errorSintactico((UnidadLexica)unidadLexica);
    }
    public int fila(int index) {
-     return ((java_cup.runtime.Symbol)stack.peek()).left;
+     return ((AnalizadorLexicoMilu)getScanner()).fila();
    }
   public int columna(int index) {
-     return ((java_cup.runtime.Symbol)stack.peek()).right;
+     return ((AnalizadorLexicoMilu)getScanner()).columna();
    }
 :};
 init with {: 

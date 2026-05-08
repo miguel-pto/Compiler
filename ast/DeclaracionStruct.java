@@ -28,6 +28,37 @@ public class DeclaracionStruct extends Instruccion {
         }
         vinculador.cierraBloque();
     }
+
+        @Override
+    public void simplifica() {
+        if (campos != null) {
+            for (Nodo campo : campos) {
+                campo.simplifica();
+            }
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (campos != null) {
+            for (Nodo campo : campos) {
+                campo.chequea();
+            }
+        }
+    }
+
+    public DeclaracionVariable buscaCampo(String idCampo) {
+        for (Nodo n : campos) {
+            if (n instanceof DeclaracionVariable) {
+                DeclaracionVariable dv = (DeclaracionVariable) n;
+                if (dv.id.equals(idCampo)) {
+                    return dv;
+                }
+            }
+        }
+        return null;
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── DeclaracionStruct: " + nombre);
         System.out.println(indent + "| └── Campos:");

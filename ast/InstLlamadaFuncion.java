@@ -1,6 +1,8 @@
 package ast;
 import java.util.List;
 
+import asint.Main;
+
 public class InstLlamadaFuncion extends Instruccion {
     public String idFunc;
     public List<Nodo> argumentos; // Lista de expresiones (valores pasados)
@@ -25,7 +27,7 @@ public class InstLlamadaFuncion extends Instruccion {
             if (def.nodeKind() == NodeKind.FUNCION) {
                 this.definicion = (DeclaracionFuncion) def;
             } else {
-                System.err.println("[" + fila() + ":" + col() + "] Error: '" + idFunc + "' no es una función.");
+                Main.gestor.errorSemantico(this.fila(), this.col(), "'" + idFunc + "' no es una función.");
                 Vinculacion.hayErrorSemantico = true;
             }
         }
@@ -33,6 +35,37 @@ public class InstLlamadaFuncion extends Instruccion {
         if (argumentos != null) {
             for (Nodo arg : argumentos) {
                 arg.vincular();
+            }
+        }
+    }
+
+    @Override
+    public void simplifica() {
+        if (argumentos != null) {
+            for (Nodo arg : argumentos) arg.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (argumentos != null) {
+            for (Nodo arg : argumentos) arg.chequea();
+        }
+
+        if (definicion != null) {
+            if (argumentos.size() != definicion.parametros.size()) {
+                Main.gestor.errorSemantico(this.fila(), this.col(), "Número de argumentos incorrecto para '" + idFunc + "'.");
+                return;
+            }
+            for (int i = 0; i < argumentos.size(); i++) {
+                Nodo arg = argumentos.get(i);
+                Parametro param = definicion.parametros.get(i);
+                
+                if (arg.getTipo() != null && param.tipo != null) {
+                    if (!param.tipo.equals(arg.getTipo())) {
+                        Main.gestor.errorSemantico(this.fila(), this.col(), "El argumento " + (i+1) + " de '" + idFunc + "' debe ser " + param.tipo.tipoKind() + ".");
+                    }
+                }
             }
         }
     }

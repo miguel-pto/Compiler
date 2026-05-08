@@ -2,9 +2,8 @@ package ast;
 
 public class ExpLiteral extends Expresion {
     public String valor;
-    public Tipo tipo; // "int", "float", "bool"
     public ExpLiteral(String v, Tipo t, int f, int c) {
-        super(f, c); this.valor = v; this.tipo = t;
+        super(f, c); this.valor = v; setTipo(t);
     }
 
     @Override
@@ -15,6 +14,18 @@ public class ExpLiteral extends Expresion {
     @Override
     public void vincular() {
         
+    }
+
+        @Override
+    public void simplifica() {
+        
+    }
+
+    @Override
+    public void chequea() {
+        if (tipo != null) {
+            tipo.chequea();
+        }
     }
 
     public void imprimir(String indent) {

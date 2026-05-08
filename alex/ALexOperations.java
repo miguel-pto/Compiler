@@ -33,6 +33,8 @@ public class ALexOperations {
   public UnidadLexica unidadNew() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.NEW); }
   public UnidadLexica unidadDe() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.DE); }
   public UnidadLexica unidadFree() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.FREE); }
+  public UnidadLexica unidadPrint() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.PRINT); }
+  public UnidadLexica unidadRead() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.READ); }
   
   // Tipos y valores constantes
   public UnidadLexica unidadInt() { return new UnidadLexica(alex.fila(), alex.columna(), ClaseLexica.INT); }

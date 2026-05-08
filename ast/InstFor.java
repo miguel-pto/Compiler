@@ -1,6 +1,8 @@
 package ast;
 import java.util.List;
 
+import asint.Main;
+
 public class InstFor extends Instruccion {
     public Nodo ini; 
     public Nodo cond;  
@@ -39,6 +41,33 @@ public class InstFor extends Instruccion {
         }
         vinculador.cierraBloque();
     }
+
+        @Override
+    public void simplifica() {
+        if (ini != null) ini.simplifica();
+        if (cond != null) cond.simplifica();
+        if (iteracion != null) iteracion.simplifica();
+        if (cuerpo != null) {
+            for (Nodo n : cuerpo) n.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (ini != null) ini.chequea();
+
+        if (cond != null) {
+            cond.chequea();
+            if (cond.getTipo() != null && cond.getTipo().tipoKind() != TipoKind.BOOL) {
+                Main.gestor.errorSemantico(this.fila(), this.col(), "La condición del bucle FOR debe ser booleana.");
+            }
+        }
+        if (iteracion != null) iteracion.chequea();
+        if (cuerpo != null) {
+            for (Nodo n : cuerpo) n.chequea();
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstFor:");
         System.out.println(indent + "| └── Inicializacion:");

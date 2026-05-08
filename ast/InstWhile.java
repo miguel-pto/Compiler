@@ -1,6 +1,8 @@
 package ast;
 import java.util.List;
 
+import asint.Main;
+
 public class InstWhile extends Instruccion {
     public Nodo condicion;
     public List<Nodo> cuerpo;
@@ -30,6 +32,31 @@ public class InstWhile extends Instruccion {
         }
         vinculador.cierraBloque();
     }
+
+        @Override
+    public void simplifica() {
+        if (condicion != null) condicion.simplifica();
+        if (cuerpo != null) {
+            for (Nodo instr : cuerpo) instr.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (condicion != null) {
+            condicion.chequea();
+            if (condicion.getTipo() != null && condicion.getTipo().tipoKind() != TipoKind.BOOL) {
+                Main.gestor.errorSemantico(this.fila(), this.col(), "La condición del WHILE debe ser de tipo BOOL.");
+            }
+        }
+
+        if (cuerpo != null) {
+            for (Nodo instr : cuerpo) {
+                instr.chequea();
+            }
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstWhile:");
         System.out.println(indent + "| └── Condicion:");

@@ -1,6 +1,8 @@
 package ast;
 import java.util.List;
 
+import asint.Main;
+
 public class InstIf extends Instruccion {
     public Nodo condicion;
     public List<Nodo> bloqueIf;
@@ -39,6 +41,39 @@ public class InstIf extends Instruccion {
                 instr.vincular();
             }
             vinculador.cierraBloque();
+        }
+    }
+
+    @Override
+    public void simplifica() {
+        if (condicion != null) condicion.simplifica();
+        if (bloqueIf != null) {
+            for (Nodo n : bloqueIf) n.simplifica();
+        }
+        if (bloqueElse != null) {
+            for (Nodo n : bloqueElse) n.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (condicion != null) {
+            condicion.chequea();
+            if (condicion.getTipo() != null && condicion.getTipo().tipoKind() != TipoKind.BOOL) {
+                Main.gestor.errorSemantico(this.fila(), this.col(), "La condición del IF debe ser booleana.");
+            }
+        }
+
+        if (bloqueIf != null) {
+            for (Nodo n : bloqueIf) {
+                n.chequea();
+            }
+        }
+
+        if (bloqueElse != null) {
+            for (Nodo n : bloqueElse) {
+                n.chequea();
+            }
         }
     }
     

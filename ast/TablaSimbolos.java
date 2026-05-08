@@ -22,17 +22,14 @@ public class TablaSimbolos {
     // Método para funciones
     // Añade el nodo a la lista existente o crea una nueva si no había
     public void insertarFuncion(String id, Nodo nodo) {
-    // 1. Intentamos obtener la lista de definiciones para ese nombre
     List<Nodo> listaExistente = simbolos.get(id);
 
-    // 2. Si la lista NO existe (es la primera vez que vemos esta función)
     if (listaExistente == null) {
         // Creamos la lista, añadimos el primer nodo y la guardamos en el mapa
         List<Nodo> nuevaLista = new ArrayList<>();
         nuevaLista.add(nodo);
         simbolos.put(id, nuevaLista);
     } 
-    // 3. Si la lista YA existe (posible sobrecarga - Diapo 13)
     else {
         // Recorremos para evitar meter exactamente el mismo nodo
         for (Nodo ast : listaExistente) {
@@ -45,7 +42,6 @@ public class TablaSimbolos {
     }
 }
 
-    // Operación: buscaId (Diapo 24)
     public List<Nodo> buscar(String id) {
         return simbolos.get(id); // Devuelve la lista completa de definiciones
     }

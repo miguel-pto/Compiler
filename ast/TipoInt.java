@@ -11,6 +11,16 @@ public class TipoInt extends Tipo {
     }
 
     @Override
+    public void simplifica() {
+        // No hace nada, ya es un tipo base
+    }
+
+    @Override
+    public void chequea() {
+        // No tiene restricciones que comprobar
+    }
+
+    @Override
     public void vincular() {
         
     }

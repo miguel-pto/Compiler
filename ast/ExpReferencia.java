@@ -20,6 +20,24 @@ public class ExpReferencia extends Nodo {
         }
     }
 
+        @Override
+    public void simplifica() {
+        if (designador != null) {
+            designador.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (designador != null) {
+            designador.chequea();
+            Tipo tHijo = designador.getTipo();
+            if (tHijo != null) {
+                this.setTipo(new TipoPuntero(tHijo, fila(), col()));
+            }
+        }
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── ExpReferencia:");
         System.out.println(indent + "| └── Designador:");

@@ -15,6 +15,16 @@ public class TipoVoid extends Tipo {
         
     }
 
+    @Override
+    public void simplifica() {
+        // Ya es tipo base
+    }
+
+    @Override
+    public void chequea() {
+        // No tiene restricciones internas
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── TipoVoid");
     }

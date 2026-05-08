@@ -26,6 +26,21 @@ public class Programa extends Nodo {
         }
         vinculador.cierraBloque();
     }
+
+        @Override
+    public void simplifica() {
+        for (Nodo i : instrucciones) {
+            i.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        for (Nodo i : instrucciones) {
+            i.chequea();
+        }
+    }
+
     @Override
     public void imprimir(String indent) {
         System.out.println(indent + "Programa:");

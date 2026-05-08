@@ -1,5 +1,7 @@
 package ast;
 
+import asint.Main;
+
 public class InstFree extends Instruccion {
     public Expresion puntero;
 
@@ -17,6 +19,25 @@ public class InstFree extends Instruccion {
     public void vincular() {
         if (puntero != null) {
             puntero.vincular();
+        }
+    }
+
+        @Override
+    public void simplifica() {
+        if (puntero != null) {
+            puntero.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (puntero != null) {
+            puntero.chequea();
+            if (puntero.getTipo() != null) {
+                if (puntero.getTipo().tipoKind() != TipoKind.PUNTERO) {
+                    Main.gestor.errorSemantico(this.fila(), this.col(), "La instrucción 'free' requiere un puntero, pero recibió " + puntero.getTipo().tipoKind() + ".");
+                }
+            }
         }
     }
 

@@ -2,13 +2,12 @@ package ast;
 
 public class Parametro extends Nodo {
     public String id;
-    public Tipo tipo;
     public boolean porReferencia; 
 
     public Parametro(String id, Tipo t, boolean ref, int f, int c) {
         super(f, c);
         this.id = id;
-        this.tipo = t;
+        setTipo(t);
         this.porReferencia = ref;
     }
 
@@ -23,6 +22,20 @@ public class Parametro extends Nodo {
             tipo.vincular();
         }
         vinculador.insertaId(id, this);
+    }
+
+    @Override
+    public void simplifica() {
+        if (tipo != null) {
+            tipo.simplifica();
+        }
+    }
+
+    @Override
+    public void chequea() {
+        if (tipo != null) {
+            tipo.chequea();
+        }
     }
 
     public void imprimir(String indent) {

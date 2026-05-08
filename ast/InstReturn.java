@@ -8,7 +8,7 @@ public class InstReturn extends Instruccion {
         this.valor = v;
     }
 
-        @Override
+    @Override
     public NodeKind nodeKind() {
         return NodeKind.INSTRUCCION;
     }
@@ -17,6 +17,21 @@ public class InstReturn extends Instruccion {
     public void vincular() {
         if (valor != null) {
             valor.vincular();
+        }
+    }
+
+    @Override
+    public void simplifica() {
+        if (valor != null) valor.simplifica();
+    }
+
+    @Override
+    public void chequea() {
+        if (valor != null) {
+            valor.chequea();
+            this.setTipo(valor.getTipo());
+        } else {
+            this.setTipo(new TipoVoid(fila(), col()));
         }
     }
 
