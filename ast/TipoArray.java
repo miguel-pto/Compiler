@@ -3,13 +3,17 @@ package ast;
 import asint.Main;
 
 public class TipoArray extends Tipo {
-    public Expresion tam;
-    public Tipo tipo;
+    private Expresion tam;
+    private Tipo tipoElementos;
 
     public TipoArray(Nodo size, Tipo t, int f, int c) {
         super(f, c);
         this.tam = (Expresion) size;
-        this.tipo = t;
+        this.tipoElementos = t;
+    }
+
+    public Tipo getTipoElementos(){
+        return this.tipoElementos;
     }
 
     @Override
@@ -20,20 +24,20 @@ public class TipoArray extends Tipo {
     @Override
     public void vincular() {
         if (this.tam != null) this.tam.vincular();
-        if (this.tipo != null) this.tipo.vincular();
+        if (this.tipoElementos != null) this.tipoElementos.vincular();
     }
 
 
     @Override
     public void simplifica() {
         if (this.tam != null) this.tam.simplifica();
-        if (this.tipo != null) this.tipo.simplifica();
+        if (this.tipoElementos != null) this.tipoElementos.simplifica();
     }
 
     @Override
     public void chequea() {
-        if (this.tipo != null) {
-            this.tipo.chequea();
+        if (this.tipoElementos != null) {
+            this.tipoElementos.chequea();
         }
         
         if (tam != null) {
@@ -45,12 +49,20 @@ public class TipoArray extends Tipo {
     }
 
     @Override
+    public int getTam() {
+        if (tam instanceof ExpLiteral) {
+            return Integer.parseInt(((ExpLiteral)tam).getValor()) * tipoElementos.getTam();
+        } 
+        return 8; 
+    }
+
+    @Override
     public boolean equals(Tipo otro) {
         if (otro == null) return false;
         if (otro.tipoKind() != TipoKind.ARRAY) return false;
         
         TipoArray otroA = (TipoArray) otro;
-        return this.tipo.equals(otroA.tipo);
+        return this.tipoElementos.equals(otroA.tipoElementos);
     }
 
     public void imprimir(String indent) {
@@ -58,6 +70,6 @@ public class TipoArray extends Tipo {
         System.out.println(indent + "| └── Tamaño:");
         tam.imprimir(indent + "| | ");
         System.out.println(indent + "| └── Tipo de elementos:");
-        tipo.imprimir(indent + "| | ");
+        tipoElementos.imprimir(indent + "| | ");
     }
 }

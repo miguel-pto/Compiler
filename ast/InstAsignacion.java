@@ -3,8 +3,8 @@ package ast;
 import asint.Main;
 
 public class InstAsignacion extends Instruccion {
-    public Nodo destino; 
-    public Nodo valor;    
+    private Nodo destino; 
+    private Nodo valor;    
 
     public InstAsignacion(Nodo d, Nodo v, int f, int c) {
         super(f, c);
@@ -53,6 +53,26 @@ public class InstAsignacion extends Instruccion {
             }
         }
     }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (destino != null && valor != null) {
+            // 1. PRIMERO la dirección de destino (L-Value)
+            destino.codeD(sb);
+            
+            // 2. DESPUÉS el valor a guardar (R-Value)
+            ((Expresion)valor).codeE(sb);
+            
+            // 3. Guardamos según el tipo
+            if (destino.getTipo().tipoKind() == TipoKind.FLOAT) {
+                sb.append("    f32.store\n");
+            } else {
+                sb.append("    i32.store\n");
+            }
+        }
+    }
+
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstAsignacion:");

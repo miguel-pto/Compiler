@@ -4,8 +4,8 @@ import java.util.List;
 import asint.Main;
 
 public class InstLlamadaFuncion extends Instruccion {
-    public String idFunc;
-    public List<Nodo> argumentos; // Lista de expresiones (valores pasados)
+    private String idFunc;
+    private List<Nodo> argumentos; // Lista de expresiones (valores pasados)
     private DeclaracionFuncion definicion;
 
     public InstLlamadaFuncion(String id, List<Nodo> args, int f, int c) {
@@ -53,13 +53,13 @@ public class InstLlamadaFuncion extends Instruccion {
         }
 
         if (definicion != null) {
-            if (argumentos.size() != definicion.parametros.size()) {
+            if (argumentos.size() != definicion.getParametros().size()) {
                 Main.gestor.errorSemantico(this.fila(), this.col(), "Número de argumentos incorrecto para '" + idFunc + "'.");
                 return;
             }
             for (int i = 0; i < argumentos.size(); i++) {
                 Nodo arg = argumentos.get(i);
-                Parametro param = definicion.parametros.get(i);
+                Parametro param = definicion.getParametros().get(i);
                 
                 if (arg.getTipo() != null && param.tipo != null) {
                     if (!param.tipo.equals(arg.getTipo())) {
@@ -70,6 +70,55 @@ public class InstLlamadaFuncion extends Instruccion {
         }
     }
 
+    @Override
+    public int calcularMemoria(int c, int profundidad) {
+        int tamArgs = 4; 
+        if (argumentos != null && definicion != null) {
+            for (int i = 0; i < argumentos.size(); i++) {
+                Parametro pDef = definicion.getParametros().get(i);
+                if (pDef.getPorReferencia()) {
+                    tamArgs += 4;
+                } else {
+                    tamArgs += pDef.getTipo().getTam();
+                }
+            }
+        }
+        if (tamArgs > c) {
+            return tamArgs;
+        }
+        return c;
+    }
+
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        int desplazamiento = 4;
+        if (argumentos != null && definicion != null) {
+            for (int i = 0; i < argumentos.size(); i++) {
+                Nodo arg = argumentos.get(i);
+                Parametro pDef = definicion.getParametros().get(i);
+                sb.append("    global.get $SP\n");
+                sb.append("    i32.const " + desplazamiento + "\n");
+                sb.append("    i32.add\n");
+                if (pDef.getPorReferencia()) {
+                    ((Designador)arg).codeD(sb);
+                } else {
+                    ((Expresion)arg).codeE(sb);
+                }
+                sb.append("    i32.store\n");
+                
+                if (pDef.getPorReferencia()) {
+                    desplazamiento += 4; // Un puntero/referencia siempre mide 4
+                } else {
+                    desplazamiento += pDef.getTipo().getTam();
+                }
+            }
+        }
+        sb.append("    call $" + idFunc + "\n");
+        if (definicion != null && definicion.getTipoRetorno().tipoKind() != TipoKind.VOID) {
+            sb.append("    drop\n");
+        }
+    }
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstLlamadaFuncion: " + idFunc);

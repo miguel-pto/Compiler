@@ -4,13 +4,17 @@ import java.util.List;
 import asint.Main;
 
 public class InstWhile extends Instruccion {
-    public Nodo condicion;
-    public List<Nodo> cuerpo;
+    private Nodo condicion;
+    private List<Nodo> cuerpo;
 
     public InstWhile(Nodo cond, List<Nodo> cuerpo, int f, int c) {
         super(f, c);
         this.condicion = cond;
         this.cuerpo = cuerpo;
+    }
+
+    public List<Nodo> getCuerpo(){
+        return this.cuerpo;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class InstWhile extends Instruccion {
         vinculador.cierraBloque();
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (condicion != null) condicion.simplifica();
         if (cuerpo != null) {
@@ -56,6 +60,37 @@ public class InstWhile extends Instruccion {
             }
         }
     }
+
+    @Override
+    public int calcularMemoria(int despActual, int profundidad) {
+        int desplLocal = despActual;
+        if (cuerpo != null) {
+            for (Nodo instr : cuerpo) {
+                desplLocal = instr.calcularMemoria(desplLocal, profundidad);
+            }
+        }
+        return desplLocal;
+    }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        sb.append("  block\n"); // Bloque exterior para salir del bucle
+        sb.append("    loop\n");  // Bloque interior para repetir el bucle
+        if (condicion != null) {
+            ((Expresion)condicion).codeE(sb);
+            sb.append("      i32.eqz\n");
+            sb.append("      br_if 1\n");  
+        }
+        if (cuerpo != null) {
+            for (Nodo instr : cuerpo) {
+                instr.codeI(sb);
+            }
+        }
+        sb.append("      br 0\n");
+        sb.append("    end\n"); 
+        sb.append("  end\n");  
+    }
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstWhile:");

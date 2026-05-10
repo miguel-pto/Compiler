@@ -3,8 +3,9 @@ package ast;
 import asint.Main;
 
 public class ExpUnaria extends Expresion {
-    public Nodo operando;
-    public String op;
+    private Nodo operando;
+    private String op;
+    
     public ExpUnaria(Nodo e, String o, int f, int c) {
         super(f, c); this.operando = e; this.op = o;
     }
@@ -50,6 +51,28 @@ public class ExpUnaria extends Expresion {
                 } 
                 else if (op.equals("&")) {
                     this.setTipo(new TipoPuntero(tHijo, fila(), col()));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void codeE(StringBuilder sb) {
+        if (op.equals("&")) {
+            ((Designador)operando).codeD(sb);
+        } else {
+            ((Expresion)operando).codeE(sb);
+            TipoKind k = operando.getTipo().tipoKind();
+
+            if (op.equals("!")) {
+                sb.append("    i32.eqz\n");
+            } 
+            else if (op.equals("-")) {
+                if (k == TipoKind.FLOAT) {
+                    sb.append("    f32.neg\n");
+                } else {
+                    sb.append("    i32.const -1\n");
+                    sb.append("    i32.mul\n");
                 }
             }
         }

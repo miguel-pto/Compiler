@@ -1,7 +1,9 @@
 package asint;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.Reader;
 import alex.AnalizadorLexicoMilu;
 import ast.*;
@@ -38,6 +40,18 @@ public class Main {
          System.out.println("\n=== INICIANDO FASE DE TIPADO ===");
          arbol.chequea();
      }
+
+     arbol.calcularMemoria(0, 0);
+     System.out.println("[ÉXITO] Gestión de memoria completada.");
+
+     StringBuilder codigoWasm = new StringBuilder();
+     arbol.codeI(codigoWasm);
+     
+     try (PrintStream out = new PrintStream(new FileOutputStream("salida.wat"))) {
+         out.print(codigoWasm.toString());
+     }
+     
+     System.out.println("\n[ÉXITO] Código WebAssembly generado en 'salida.wat'.");
      
      System.out.println("\n=== ESTRUCTURA DEL AST VINCULADO ===");
      arbol.imprimir("");

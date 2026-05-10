@@ -3,7 +3,7 @@ package ast;
 import asint.Main;
 
 public class InstFree extends Instruccion {
-    public Expresion puntero;
+    private Expresion puntero;
 
     public InstFree(Expresion p, int f, int c) {
         super(f, c);
@@ -40,6 +40,15 @@ public class InstFree extends Instruccion {
             }
         }
     }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (puntero != null) {
+            puntero.codeE(sb);
+            sb.append("    drop\n");
+        }
+    }
+
 
     @Override
     public void imprimir(String indent) {

@@ -17,4 +17,6 @@ public abstract class Tipo extends Nodo {
     public NodeKind nodeKind() {
         return NodeKind.TIPO;
     }
+
+    public abstract int getTam();
 }

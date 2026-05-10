@@ -1,14 +1,42 @@
 package ast;
 
 public class Parametro extends Nodo {
-    public String id;
-    public boolean porReferencia; 
+    private String id;
+    private boolean porReferencia; 
+    private int desplazamiento;
+    private int pa;
 
     public Parametro(String id, Tipo t, boolean ref, int f, int c) {
         super(f, c);
         this.id = id;
         setTipo(t);
         this.porReferencia = ref;
+    }
+
+    public boolean getPorReferencia(){
+        return this.porReferencia;
+    }
+
+    @Override
+    public int calcularMemoria(int despInicio, int profundidad) {
+        this.desplazamiento = despInicio;
+        this.pa = profundidad;
+        
+        int tamano;
+        if (this.porReferencia) {
+            tamano = 4;
+        } else {
+            tamano = getTipo().getTam();
+        }
+        return despInicio + tamano;
+    }
+
+    public int getDesplazamiento() { 
+        return desplazamiento; 
+    }
+    
+    public int getPa() { 
+        return pa; 
     }
 
     @Override

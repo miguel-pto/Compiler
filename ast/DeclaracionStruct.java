@@ -2,8 +2,9 @@ package ast;
 import java.util.List;
 
 public class DeclaracionStruct extends Instruccion {
-    public String nombre;
-    public List<Nodo> campos;
+    private String nombre;
+    private List<Nodo> campos;
+    private int tamanoTotal;
 
     public DeclaracionStruct(String id, List<Nodo> lista, int f, int c) {
         super(f, c);
@@ -47,11 +48,28 @@ public class DeclaracionStruct extends Instruccion {
         }
     }
 
+        @Override
+    public int calcularMemoria(int despActual, int profundidad) {
+        int desplInterno = 0;
+        
+        if (campos != null) {
+            for (Nodo campo : campos) {
+                desplInterno = campo.calcularMemoria(desplInterno, profundidad);
+            }
+        }
+        this.tamanoTotal = desplInterno;
+        return despActual;
+    }
+
+    public int getTam() {
+        return tamanoTotal;
+    }
+
     public DeclaracionVariable buscaCampo(String idCampo) {
         for (Nodo n : campos) {
             if (n instanceof DeclaracionVariable) {
                 DeclaracionVariable dv = (DeclaracionVariable) n;
-                if (dv.id.equals(idCampo)) {
+                if (dv.getId().equals(idCampo)) {
                     return dv;
                 }
             }

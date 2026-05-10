@@ -25,6 +25,11 @@ public class TipoVoid extends Tipo {
         // No tiene restricciones internas
     }
 
+    @Override
+    public int getTam() {
+        return 0; 
+    }
+
     public void imprimir(String indent) {
         System.out.println(indent + "└── TipoVoid");
     }

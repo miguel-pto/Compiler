@@ -2,7 +2,7 @@ package ast;
 import java.util.List;
 
 public class InstBloque extends Instruccion {
-    public List<Nodo> instrucciones;
+    private List<Nodo> instrucciones;
 
     public InstBloque(List<Nodo> lista, int f, int c) {
         super(f, c);
@@ -41,6 +41,32 @@ public class InstBloque extends Instruccion {
             }
         }
     }
+
+    @Override
+    public int calcularMemoria(int despActual, int profundidad) {
+        int c_inicial = despActual;
+        int c = despActual;
+        if (instrucciones != null) {
+            for (Nodo i : instrucciones) {
+                if (i != null) {
+                    c = i.calcularMemoria(c, profundidad);
+                }
+            }
+        }
+        return c_inicial; 
+    }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (instrucciones != null) {
+            for (Nodo i : instrucciones) {
+                if (i != null) {
+                    i.codeI(sb);
+                }
+            }
+        }
+    }
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstBloque:");

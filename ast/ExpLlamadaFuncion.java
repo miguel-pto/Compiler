@@ -3,9 +3,9 @@ import java.util.List;
 
 import asint.Main;
 
-public class ExpLlamadaFuncion extends Nodo {
-    public String idFunc;
-    public List<Nodo> argumentos;
+public class ExpLlamadaFuncion extends Expresion {
+    private String idFunc;
+    private List<Nodo> argumentos;
     private DeclaracionFuncion definicion;
 
     public ExpLlamadaFuncion(String id, List<Nodo> args, int f, int c) {
@@ -39,7 +39,7 @@ public class ExpLlamadaFuncion extends Nodo {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (argumentos != null) {
             for (Nodo arg : argumentos) arg.simplifica();
@@ -53,12 +53,12 @@ public class ExpLlamadaFuncion extends Nodo {
         }
 
         if (definicion != null) {
-            if (argumentos.size() != definicion.parametros.size()) {
+            if (argumentos.size() != definicion.getParametros().size()) {
                 Main.gestor.errorSemantico(this.fila(), this.col(), "Número de parámetros incorrecto.");
             } else {
                 for (int i = 0; i < argumentos.size(); i++) {
                     Nodo arg = argumentos.get(i);
-                    Parametro p = definicion.parametros.get(i);
+                    Parametro p = definicion.getParametros().get(i);
                     if (arg.getTipo() != null && p.tipo != null) {
                         if (!p.tipo.equals(arg.getTipo())) {
                             Main.gestor.errorSemantico(this.fila(), this.col(), "Tipo de argumento incompatible.");
@@ -66,8 +66,36 @@ public class ExpLlamadaFuncion extends Nodo {
                     }
                 }
             }
-            this.setTipo(definicion.tipoRetorno);
+            this.setTipo(definicion.getTipoRetorno());
         }
+    }
+
+    @Override
+    public void codeE(StringBuilder sb) {
+        int desplazamiento = 4;
+        if (argumentos != null && definicion != null) {
+            for (int i = 0; i < argumentos.size(); i++) {
+                Nodo arg = argumentos.get(i);
+                Parametro pDef = definicion.getParametros().get(i);
+                sb.append("    global.get $SP\n");
+                sb.append("    i32.const " + desplazamiento + "\n");
+                sb.append("    i32.add\n");
+                if (pDef.getPorReferencia()) {
+                    // Si es REF, metemos en la pila la dirección del argumento
+                    ((Designador)arg).codeD(sb);
+                } else {
+                    // Si es VALOR, metemos en la pila el valor resultante
+                    ((Expresion)arg).codeE(sb);
+                }
+                sb.append("    i32.store\n");
+                if (pDef.getPorReferencia()) {
+                    desplazamiento += 4;
+                } else {
+                    desplazamiento += pDef.getTipo().getTam();
+                }
+            }
+        }
+        sb.append("    call $" + idFunc + "\n");
     }
 
     public void imprimir(String indent) {

@@ -1,1 +1,17 @@
-var x:int=true;
+struct Personaje : {
+    var vida: int;
+    var magia: int;
+}
+
+// Array de 3 punteros a Personaje
+var equipo: array[3] de *Personaje; 
+
+def main(): void as {
+    // 1. Reservamos memoria para el segundo personaje del array
+    equipo[1] = new Personaje;
+    var p: *Personaje = equipo[1];
+    *p.magia = 80;
+    
+    print(*p.magia);
+}
+

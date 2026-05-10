@@ -1,7 +1,7 @@
 package ast;
 
 public class InstReturn extends Instruccion {
-    public Nodo valor; // Puede ser null si la función es 'void'
+    private Nodo valor; // Puede ser null si la función es 'void'
 
     public InstReturn(Nodo v, int f, int c) {
         super(f, c);
@@ -34,6 +34,20 @@ public class InstReturn extends Instruccion {
             this.setTipo(new TipoVoid(fila(), col()));
         }
     }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (valor != null) {
+            ((Expresion)valor).codeE(sb);
+        }
+        sb.append("    global.get $MP\n");
+        sb.append("    global.set $SP\n");
+        sb.append("    global.get $MP\n");
+        sb.append("    i32.load\n");
+        sb.append("    global.set $MP\n");
+        sb.append("    return\n");
+    }
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstReturn:");

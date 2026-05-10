@@ -1,7 +1,7 @@
 package ast;
 
-public class ExpNew extends Nodo {
-    public Tipo tipoReservado;
+public class ExpNew extends Expresion {
+    private Tipo tipoReservado;
 
     public ExpNew(Tipo t, int f, int c) {
         super(f, c);
@@ -34,6 +34,13 @@ public class ExpNew extends Nodo {
             tipoReservado.chequea();
             this.setTipo(new TipoPuntero(tipoReservado, fila(), col()));
         }
+    }
+
+    @Override
+    public void codeE(StringBuilder sb) {
+        int tamano = tipoReservado.getTam();
+        sb.append("    i32.const " + tamano + "\n");
+        sb.append("    call $reserveHeap\n");
     }
 
     public void imprimir(String indent) {

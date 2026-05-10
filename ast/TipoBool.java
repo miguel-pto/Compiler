@@ -29,4 +29,8 @@ public class TipoBool extends Tipo {
 
     }
 
+    @Override
+    public int getTam() {
+        return 4;
+    }
 }

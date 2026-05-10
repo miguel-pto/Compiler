@@ -3,8 +3,9 @@ package ast;
 import asint.Main;
 
 public class ExpBinaria extends Expresion {
-    public Nodo izq, der;
-    public String op;
+    private Nodo izq, der;
+    private String op;
+
     public ExpBinaria(Nodo i, Nodo d, String o, int f, int c) {
         super(f, c); this.izq = i; this.der = d; this.op = o;
     }
@@ -65,6 +66,43 @@ public class ExpBinaria extends Expresion {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void codeE(StringBuilder sb) {
+        ((Expresion)izq).codeE(sb);
+        ((Expresion)der).codeE(sb);
+        String tipoWasm = (izq.getTipo().tipoKind() == TipoKind.FLOAT) ? "f32" : "i32";
+        switch (op) {
+            case "+": sb.append("    " + tipoWasm + ".add\n"); break;
+            case "-": sb.append("    " + tipoWasm + ".sub\n"); break;
+            case "*": sb.append("    " + tipoWasm + ".mul\n"); break;
+            case "/": 
+                if (tipoWasm.equals("i32")) sb.append("    i32.div_s\n"); // div con signo
+                else sb.append("    f32.div\n");
+                break;
+            case "%": sb.append("    i32.rem_s\n"); break; // solo para i32
+            case "&&": sb.append("    i32.and\n"); break;
+            case "||": sb.append("    i32.or\n"); break;
+            case "==": sb.append("    " + tipoWasm + ".eq\n"); break;
+            case "!=": sb.append("    " + tipoWasm + ".ne\n"); break;
+            case "<": 
+                if (tipoWasm.equals("i32")) sb.append("    i32.lt_s\n"); 
+                else sb.append("    f32.lt\n");
+                break;
+            case ">": 
+                if (tipoWasm.equals("i32")) sb.append("    i32.gt_s\n"); 
+                else sb.append("    f32.gt\n");
+                break;
+            case "<=": 
+                if (tipoWasm.equals("i32")) sb.append("    i32.le_s\n"); 
+                else sb.append("    f32.le\n");
+                break;
+            case ">=": 
+                if (tipoWasm.equals("i32")) sb.append("    i32.ge_s\n"); 
+                else sb.append("    f32.ge\n");
+                break;
         }
     }
 

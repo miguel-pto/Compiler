@@ -1,14 +1,18 @@
 package ast;
 
 public class TipoPuntero extends Tipo {
-    public Tipo tipoApuntado;
+    private Tipo tipoApuntado;
 
     public TipoPuntero(Tipo t, int f, int c) {
         super(f, c);
         this.tipoApuntado = t;
     }
 
-        @Override
+    public Tipo getTipoApuntado(){
+        return this.tipoApuntado;
+    }
+
+    @Override
     public TipoKind tipoKind() {
         return TipoKind.PUNTERO;
     }
@@ -32,6 +36,11 @@ public class TipoPuntero extends Tipo {
         if (tipoApuntado != null) {
             tipoApuntado.chequea();
         }
+    }
+
+    @Override
+    public int getTam() {
+        return 4;
     }
 
     @Override

@@ -3,7 +3,7 @@ package ast;
 import asint.Main;
 
 public class InstRead extends Instruccion {
-    public Designador destino;
+    private Designador destino;
 
     public InstRead(Designador d, int f, int c) {
         super(f, c);
@@ -41,6 +41,20 @@ public class InstRead extends Instruccion {
             }
         }
     }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (destino != null) {
+            destino.codeD(sb);
+            sb.append("    call $read\n");
+            if (destino.getTipo().tipoKind() == TipoKind.FLOAT) {
+                sb.append("    f32.store\n");
+            } else {
+                sb.append("    i32.store\n");
+            }
+        }
+    }
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstRead");

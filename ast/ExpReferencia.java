@@ -1,7 +1,7 @@
 package ast;
 
-public class ExpReferencia extends Nodo {
-    public Nodo designador; 
+public class ExpReferencia extends Expresion {
+    private Nodo designador; 
 
     public ExpReferencia(Nodo d, int f, int c) {
         super(f, c);
@@ -36,6 +36,11 @@ public class ExpReferencia extends Nodo {
                 this.setTipo(new TipoPuntero(tHijo, fila(), col()));
             }
         }
+    }
+
+    @Override
+    public void codeE(StringBuilder sb) {
+        ((Designador)designador).codeD(sb);
     }
 
     public void imprimir(String indent) {

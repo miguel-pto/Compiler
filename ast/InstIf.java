@@ -4,15 +4,23 @@ import java.util.List;
 import asint.Main;
 
 public class InstIf extends Instruccion {
-    public Nodo condicion;
-    public List<Nodo> bloqueIf;
-    public List<Nodo> bloqueElse; // null si no hay else
+    private Nodo condicion;
+    private List<Nodo> bloqueIf;
+    private List<Nodo> bloqueElse; // null si no hay else
 
     public InstIf(Nodo cond, List<Nodo> i, List<Nodo> e, int f, int c) {
         super(f, c);
         this.condicion = cond;
         this.bloqueIf = i;
         this.bloqueElse = e;
+    }
+
+    public List<Nodo> getBloqueIf(){
+        return this.bloqueIf;
+    }
+
+    public List<Nodo> getBloqueElse(){
+        return this.bloqueElse;
     }
 
     @Override
@@ -63,19 +71,60 @@ public class InstIf extends Instruccion {
                 Main.gestor.errorSemantico(this.fila(), this.col(), "La condición del IF debe ser booleana.");
             }
         }
-
         if (bloqueIf != null) {
             for (Nodo n : bloqueIf) {
                 n.chequea();
             }
         }
-
         if (bloqueElse != null) {
             for (Nodo n : bloqueElse) {
                 n.chequea();
             }
         }
     }
+
+    @Override
+    public int calcularMemoria(int despActual, int profundidad) {
+        int inicioIf = despActual;
+        int desplFinalIf = inicioIf;
+        if (bloqueIf != null) {
+            for (Nodo n : bloqueIf) {
+                desplFinalIf = n.calcularMemoria(desplFinalIf, profundidad);
+            }
+        }
+        int desplFinalElse = inicioIf;
+        if (bloqueElse != null) {
+            for (Nodo n : bloqueElse) {
+                desplFinalElse = n.calcularMemoria(desplFinalElse, profundidad);
+            }
+        }
+        if (desplFinalIf > desplFinalElse) {
+            return desplFinalIf;
+        } else {
+            return desplFinalElse;
+        }
+    }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (condicion != null) {
+            ((Expresion)condicion).codeE(sb);
+        }
+        sb.append("    if\n");
+        if (bloqueIf != null) {
+            for (Nodo n : bloqueIf) {
+                n.codeI(sb);
+            }
+        }
+        if (bloqueElse != null) {
+            sb.append("    else\n");
+            for (Nodo n : bloqueElse) {
+                n.codeI(sb);
+            }
+        }
+        sb.append("    end\n");
+    }
+
     
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstIf:");

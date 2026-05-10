@@ -3,7 +3,7 @@ package ast;
 import asint.Main;
 
 public class InstPrint extends Instruccion {
-    public Nodo expresion;
+    private Nodo expresion;
 
     public InstPrint(Nodo e, int f, int c) {
         super(f, c);
@@ -39,6 +39,14 @@ public class InstPrint extends Instruccion {
                     Main.gestor.errorSemantico(this.fila(), this.col(), "No se puede imprimir un valor de tipo " + kind + ".");
                 }
             }
+        }
+    }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (expresion != null) {
+            ((Expresion)expresion).codeE(sb);
+            sb.append("    call $print\n");
         }
     }
 

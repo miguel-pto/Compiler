@@ -3,12 +3,16 @@ package ast;
 import asint.Main;
 
 public class TipoStruct extends Tipo {
-    public String nombre;
+    private String nombre;
     private Nodo definicion;
 
     public TipoStruct(String id, int f, int c) {
         super(f, c);
         this.nombre = id;
+    }
+
+    public String getNombre(){
+        return this.nombre;
     }
 
     @Override
@@ -20,7 +24,6 @@ public class TipoStruct extends Tipo {
     public void vincular() {
         Nodo def = vinculador.buscaId(nombre);
         if (def != null) {
-            // Verificamos que el identificador sea realmente un Struct
             if (def instanceof DeclaracionStruct) {
                 this.definicion = def;
             } else {
@@ -38,6 +41,14 @@ public class TipoStruct extends Tipo {
     @Override
     public void chequea() {
         
+    }
+
+    @Override
+    public int getTam() {
+        if (definicion != null) {
+            return ((DeclaracionStruct) definicion).getTam();
+        }
+        return 0;
     }
 
     @Override

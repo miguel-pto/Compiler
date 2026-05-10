@@ -4,10 +4,10 @@ import java.util.List;
 import asint.Main;
 
 public class InstFor extends Instruccion {
-    public Nodo ini; 
-    public Nodo cond;  
-    public Nodo iteracion; 
-    public List<Nodo> cuerpo;
+    private Nodo ini; 
+    private Nodo cond;  
+    private Nodo iteracion; 
+    private List<Nodo> cuerpo;
 
     public InstFor(Nodo i, Nodo condicion, Nodo it, List<Nodo> body, int f, int c) {
         super(f, c);
@@ -15,6 +15,10 @@ public class InstFor extends Instruccion {
         this.cond = condicion;
         this.iteracion = it;
         this.cuerpo = body;
+    }
+
+    public List<Nodo> getCuerpo(){
+        return this.cuerpo;
     }
 
     @Override
@@ -67,6 +71,46 @@ public class InstFor extends Instruccion {
             for (Nodo n : cuerpo) n.chequea();
         }
     }
+
+    @Override
+    public int calcularMemoria(int despActual, int profundidad) {
+        int desplLocal = despActual;
+        if (ini != null) desplLocal = ini.calcularMemoria(desplLocal, profundidad);
+        if (cond != null) desplLocal = cond.calcularMemoria(desplLocal, profundidad);
+        if (iteracion != null) desplLocal = iteracion.calcularMemoria(desplLocal, profundidad);
+        if (cuerpo != null) {
+            for (Nodo n : cuerpo) {
+                desplLocal = n.calcularMemoria(desplLocal, profundidad);
+            }
+        } 
+        return desplLocal;
+    }
+
+    @Override
+    public void codeI(StringBuilder sb) {
+        if (ini != null) {
+            ini.codeI(sb);
+        }
+        sb.append("  block\n");
+        sb.append("    loop\n");
+        if (cond != null) {
+            ((Expresion)cond).codeE(sb);
+            sb.append("      i32.eqz\n");
+            sb.append("      br_if 1\n");
+        }
+        if (cuerpo != null) {
+            for (Nodo n : cuerpo) {
+                n.codeI(sb);
+            }
+        }
+        if (iteracion != null) {
+            iteracion.codeI(sb);
+        }
+        sb.append("      br 0\n");
+        sb.append("    end\n");
+        sb.append("  end\n");
+    }
+
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstFor:");
