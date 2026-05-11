@@ -71,8 +71,8 @@ public class DeclaracionFuncion extends Instruccion {
             Tipo devuelto = ir.getTipo();
             if (devuelto != null && esperado != null) {
                 if (!esperado.equals(devuelto)) {
-                    Main.gestor.errorSemantico(this.fila(), this.col(), "La función '" + nombre + "' debería retornar " + 
-                        esperado.tipoKind() + " pero retorna " + devuelto.tipoKind() + ".");
+                    Main.gestor.errorSemantico(this.fila(), this.col(), "La funcion '" + nombre + "' deberia devolver " + 
+                        esperado.tipoKind() + " pero devuelve " + devuelto.tipoKind() + ".");
                 }
             }
         } 
@@ -125,7 +125,7 @@ public class DeclaracionFuncion extends Instruccion {
         }
         sb.append("\n");
 
-        sb.append("    ;; Guardar enlace dinámico: Memoria[SP] = MP viejo\n");
+        sb.append("    ;; Guardar enlace dinamico: Memoria[SP] = MP viejo\n");
         sb.append("    global.get $SP\n"); // Dirección destino (Cima-1)
         sb.append("    global.get $MP\n"); // Valor a guardar (Cima)
         sb.append("    i32.store\n");

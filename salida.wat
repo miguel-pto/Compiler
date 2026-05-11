@@ -23,7 +23,7 @@
   )
 
   (func $main
-    ;; Guardar enlace dinámico: Memoria[SP] = MP viejo
+    ;; Guardar enlace dinamico: Memoria[SP] = MP viejo
     global.get $SP
     global.get $MP
     i32.store
@@ -35,38 +35,29 @@
     i32.const 8
     i32.add
     global.set $SP
-    ;; --- Acceso a Array (codeD) ---
-    i32.const 0
-    i32.const 1
-    i32.const 4
-    i32.mul
-    i32.add
-    i32.const 8
-    call $reserveHeap
-    i32.store
     global.get $MP
     i32.const 4
     i32.add
-    ;; --- Acceso a Array (codeD) ---
-    i32.const 0
-    i32.const 1
-    i32.const 4
-    i32.mul
-    i32.add
     i32.load
+    call $print
+    global.get $MP
+    i32.const 4
+    i32.add
+    call $read
     i32.store
     global.get $MP
     i32.const 4
     i32.add
     i32.load
-    i32.const 4
-    i32.add
-    i32.const 80
-    i32.store
+    call $print
     global.get $MP
     i32.const 4
     i32.add
-    i32.load
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.store
+    global.get $MP
     i32.const 4
     i32.add
     i32.load
@@ -79,12 +70,12 @@
     global.set $MP
   )
   (func $init_global
-    i32.const 12
+    i32.const 0
     global.set $SP
     global.get $SP
     global.set $MP
 
     call $main
   )
-  (start $init_global)
+  (export "main" (func $init_global))
 )

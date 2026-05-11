@@ -97,7 +97,7 @@ public class Programa extends Nodo {
 
         sb.append("    call $main\n"); 
         sb.append("  )\n");
-        sb.append("  (start $init_global)\n");
+        sb.append("  (export \"main\" (func $init_global))\n");
         sb.append(")\n");
     }
 

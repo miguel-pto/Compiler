@@ -35,6 +35,7 @@ def main() : void as {
     } else {
         *p2.precio = 0;
     }
+    print(r);
     free(p1);
     free(p2);
 }
