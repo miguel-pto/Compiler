@@ -65,12 +65,6 @@ public class Programa extends Nodo {
         sb.append("  (global $SP (mut i32) (i32.const 0))\n");
         sb.append("  (global $MP (mut i32) (i32.const 0))\n");
         sb.append("  (global $NP (mut i32) (i32.const 131072000))\n\n");
-        sb.append("  (func $reserveStack (param $size i32)\n");
-        sb.append("    global.get $SP\n");
-        sb.append("    local.get $size\n");
-        sb.append("    i32.add\n");
-        sb.append("    global.set $SP\n");
-        sb.append("  )\n\n");
         sb.append("  (func $reserveHeap (param $size i32) (result i32)\n");
         sb.append("    global.get $NP\n");
         sb.append("    local.get $size\n");

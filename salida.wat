@@ -7,13 +7,6 @@
   (global $MP (mut i32) (i32.const 0))
   (global $NP (mut i32) (i32.const 131072000))
 
-  (func $reserveStack (param $size i32)
-    global.get $SP
-    local.get $size
-    i32.add
-    global.set $SP
-  )
-
   (func $reserveHeap (param $size i32) (result i32)
     global.get $NP
     local.get $size
@@ -32,36 +25,75 @@
     global.set $MP
     ;; Reservar espacio en el Stack: SP = SP + tamanoMarco
     global.get $SP
-    i32.const 8
+    i32.const 12
     i32.add
     global.set $SP
     global.get $MP
     i32.const 4
     i32.add
-    i32.load
-    call $print
-    global.get $MP
-    i32.const 4
-    i32.add
-    call $read
+    i32.const 0
     i32.store
+  block
+    loop
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    i32.const 5
+    i32.lt_s
+      i32.eqz
+      br_if 1
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.const 0
+    i32.store
+  block
+    loop
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 2
+    i32.lt_s
+      i32.eqz
+      br_if 1
     global.get $MP
     i32.const 4
     i32.add
     i32.load
     call $print
     global.get $MP
-    i32.const 4
+    i32.const 8
+    i32.add
+    i32.load
+    call $print
+    global.get $MP
+    i32.const 8
     i32.add
     global.get $MP
-    i32.const 4
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 1
     i32.add
     i32.store
+      br 0
+    end
+  end
+    global.get $MP
+    i32.const 4
+    i32.add
     global.get $MP
     i32.const 4
     i32.add
     i32.load
-    call $print
+    i32.const 1
+    i32.add
+    i32.store
+      br 0
+    end
+  end
     ;; Epílogo final
     global.get $MP
     global.set $SP

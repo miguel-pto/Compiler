@@ -82,7 +82,7 @@ public class InstFor extends Instruccion {
             for (Nodo n : cuerpo) {
                 desplLocal = n.calcularMemoria(desplLocal, profundidad);
             }
-        } 
+        }
         return desplLocal;
     }
 

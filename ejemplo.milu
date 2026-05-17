@@ -1,10 +1,10 @@
 def main() : void as {
-    var r : int;
-    var a : *int;
-    var b : int;
-    print(r);
-    read(b);
-    print(b);
-    a = &r;
-    print(a);
+    var i:int;
+    var j:int;
+    for (i = 0; i < 5; i=i+1) {
+        for (j = 0; j < 2; j=j+1) {
+            print(i);
+            print(j);
+        }
+    }
 }

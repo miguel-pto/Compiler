@@ -102,10 +102,7 @@ public class DeclaracionFuncion extends Instruccion {
         }
         int maxAlcanzado = desplParametros; 
         for (Nodo instr : cuerpo) {
-            int desplInstruccion = instr.calcularMemoria(desplParametros, profLocal);
-            if (desplInstruccion > maxAlcanzado) {
-                maxAlcanzado = desplInstruccion;
-            }
+            if (instr != null) maxAlcanzado = instr.calcularMemoria(maxAlcanzado, profLocal);
         }
         this.tamanoMarco = maxAlcanzado;
         return despActual;

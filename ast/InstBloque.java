@@ -44,7 +44,6 @@ public class InstBloque extends Instruccion {
 
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
-        int c_inicial = despActual;
         int c = despActual;
         if (instrucciones != null) {
             for (Nodo i : instrucciones) {
@@ -53,7 +52,7 @@ public class InstBloque extends Instruccion {
                 }
             }
         }
-        return c_inicial; 
+        return c; 
     }
 
     @Override
