@@ -44,7 +44,6 @@ public class Vinculacion {
                 return lista.get(0);
             }
         }
-        
         System.err.println("Error Semántico: Identificador '" + id + "' no declarado.");
         hayErrorSemantico = true;
         return null;

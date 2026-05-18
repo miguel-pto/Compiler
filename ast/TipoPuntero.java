@@ -24,7 +24,7 @@ public class TipoPuntero extends Tipo {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (tipoApuntado != null) {
             tipoApuntado.simplifica();
@@ -49,7 +49,6 @@ public class TipoPuntero extends Tipo {
         if (otro.tipoKind() != TipoKind.PUNTERO) return false;
         
         TipoPuntero otroP = (TipoPuntero) otro;
-        // Dos punteros son iguales si apuntan al mismo tipo
         return this.tipoApuntado.equals(otroP.tipoApuntado);
     }
 

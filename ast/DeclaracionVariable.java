@@ -17,7 +17,6 @@ public class DeclaracionVariable extends Instruccion {
         return this.id;
     }
 
-
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
         this.desplazamiento = despActual;
@@ -68,7 +67,6 @@ public class DeclaracionVariable extends Instruccion {
         if (this.pa == 0) {
             sb.append("    i32.const ").append(this.desplazamiento).append("\n");
         } else {
-            // Variable Local: base del marco ($MP) + desplazamiento
             sb.append("    global.get $MP\n");
             sb.append("    i32.const ").append(this.desplazamiento).append("\n");
             sb.append("    i32.add\n");
@@ -77,13 +75,9 @@ public class DeclaracionVariable extends Instruccion {
 
     @Override
     public void codeI(StringBuilder sb) {
-        // Si la variable se declara con un valor (ej: var x:int = 5;)
         if (valorInicial != null) {            
-            // 1. Dejamos la dirección de esta variable en la pila
             this.codeD(sb);
-            // 2. Evaluamos el valor inicial
             valorInicial.codeE(sb);
-            // 3. Guardamos según el tipo
             if (this.getTipo().tipoKind() == TipoKind.FLOAT) {
                 sb.append("    f32.store\n");
             } else {
@@ -95,7 +89,6 @@ public class DeclaracionVariable extends Instruccion {
     @Override
     public void codeE(StringBuilder sb) {
         this.codeD(sb);
-        // Si es float usamos f32.load, si no i32.load
         if (this.getTipo().tipoKind() == TipoKind.FLOAT) {
             sb.append("    f32.load\n");
         } else {

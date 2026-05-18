@@ -28,7 +28,7 @@ public class Programa extends Nodo {
         vinculador.cierraBloque();
     }
 
-        @Override
+    @Override
     public void simplifica() {
         for (Nodo i : instrucciones) {
             i.simplifica();
@@ -94,8 +94,6 @@ public class Programa extends Nodo {
         sb.append("  (export \"main\" (func $init_global))\n");
         sb.append(")\n");
     }
-
-
 
     @Override
     public void imprimir(String indent) {

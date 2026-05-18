@@ -34,7 +34,7 @@ terminal String IF, ELSE, WHILE, FOR, RETURN, DE, VOID, NEW, STRUCT, PUNTO, PRIN
 terminal String FALSE, FREE;
 
 non terminal Nodo S;
-non terminal Nodo ACCESO, ACCESO_PUNTERO, ACCESO_SIMPLE;
+non terminal Nodo ACCESO, ACCESO_PUNTERO, ACCESO_ARRAY, ACCESO_SIMPLE;
 non terminal Nodo B, D, A, WHILE_L, FOR_L, IFCOND, FUNDEC, STRUCTDEC;
 non terminal Nodo E0, E1, E2, E3, E4, E5, E6, E7, LIT;
 non terminal Tipo T, T_FUNCT;
@@ -82,23 +82,23 @@ D ::= VAR IDENTIFICADOR:id COLON T:t
 A ::= ACCESO:d ASIG E0:exp 
       {: RESULT = new InstAsignacion((Designador)d, exp, parser.fila(0), parser.columna(0)); :};
 
-ACCESO ::= ACCESO:a CAP E0:idx CCIERRE 
-           {: RESULT = new DesignadorArray((Designador)a, idx, parser.fila(0), parser.columna(0)); :}
-         | ACCESO:a PUNTO IDENTIFICADOR:id 
-           {: RESULT = new DesignadorCampo((Designador)a, id, parser.fila(0), parser.columna(0)); :}
-         | ACCESO_PUNTERO:a 
-           {: RESULT = a; :};
+ACCESO ::= ACCESO:a PUNTO IDENTIFICADOR:id
+	{: RESULT = new DesignadorCampo((Designador)a, id, parser.fila(0), parser.columna(0)); :}
+      | ACCESO_PUNTERO:a
+      {: RESULT = a; :};
 
 ACCESO_PUNTERO ::= MULT ACCESO_PUNTERO:a 
-                   {: RESULT = new DesignadorPuntero(a, parser.fila(0), parser.columna(0)); :}
+      {: RESULT = new DesignadorPuntero((Designador)a, parser.fila(0), parser.columna(0)); :}
+	| ACCESO_ARRAY:a
+	{: RESULT = a; :};
 
-                 | ACCESO_SIMPLE:a 
-                   {: RESULT = a; :};
+ACCESO_ARRAY ::= ACCESO_ARRAY:a CAP E0:idx CCIERRE
+	{: RESULT = new DesignadorArray((Designador)a, idx, parser.fila(0), parser.columna(0)); :}
+	| ACCESO_SIMPLE:a
+	{: RESULT = a; :};
 
-ACCESO_SIMPLE ::= IDENTIFICADOR:id 
-                  {: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :};
-
-
+ACCESO_SIMPLE ::= IDENTIFICADOR:id
+	{: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :};
 
 //funciones
 FUNDEC ::= DEF IDENTIFICADOR:id PAP P:params PCIERRE COLON T_FUNCT:ret AS BAP BLOQUE:bloque BCIERRE
@@ -242,5 +242,4 @@ OP2 ::= MULT       {: RESULT = "*"; :}
 
 OP3 ::= NEG        {: RESULT = "!"; :} 
 
-      | RESTA      {: RESULT = "-"; :} 
-      | REF        {: RESULT = "&"; :};
+      | RESTA      {: RESULT = "-"; :};

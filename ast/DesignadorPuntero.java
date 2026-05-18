@@ -45,29 +45,19 @@ public class DesignadorPuntero extends Designador {
 
     @Override
     public void codeD(StringBuilder sb) {
-        // 1. Obtenemos la dirección donde está guardado el puntero
         puntero.codeD(sb);
-        // 2. Cargamos el valor almacenado en esa dirección. 
-        // Ese valor es la dirección a la que apunta el puntero.
         sb.append("    i32.load\n");
     }
 
     @Override
     public void codeE(StringBuilder sb) {
-        // --- Acceso a Puntero (codeE) ---
-        // 1. Obtenemos la dirección apuntada
         this.codeD(sb);
-        
-        // 2. Obtenemos el tipo de lo que hay en esa dirección (tipo apuntado)
         TipoKind k = this.getTipo().tipoKind();
-        
-        // 3. Solo hacemos el segundo load si es un tipo básico
         if (k == TipoKind.INT || k == TipoKind.BOOL || k == TipoKind.PUNTERO) {
             sb.append("    i32.load\n");
         } else if (k == TipoKind.FLOAT) {
             sb.append("    f32.load\n");
         }
-        // Si es STRUCT o ARRAY, la pila se queda con la dirección apuntada.
     }
 
     public void imprimir(String indent) {

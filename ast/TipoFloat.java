@@ -5,7 +5,7 @@ public class TipoFloat extends Tipo {
         super(f, c);
     }
 
-        @Override
+    @Override
     public TipoKind tipoKind() {
         return TipoKind.FLOAT;
     }
@@ -16,12 +16,12 @@ public class TipoFloat extends Tipo {
     }
     @Override
     public void simplifica() {
-        // Tipo base, no se simplifica
+
     }
 
     @Override
     public void chequea() {
-        // No tiene restricciones internas
+
     }
 
     @Override

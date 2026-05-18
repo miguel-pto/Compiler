@@ -27,7 +27,6 @@ public class TipoArray extends Tipo {
         if (this.tipoElementos != null) this.tipoElementos.vincular();
     }
 
-
     @Override
     public void simplifica() {
         if (this.tam != null) this.tam.simplifica();

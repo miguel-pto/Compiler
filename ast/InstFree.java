@@ -22,7 +22,7 @@ public class InstFree extends Instruccion {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (puntero != null) {
             puntero.simplifica();
@@ -48,7 +48,6 @@ public class InstFree extends Instruccion {
             sb.append("    drop\n");
         }
     }
-
 
     @Override
     public void imprimir(String indent) {

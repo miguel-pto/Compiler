@@ -74,8 +74,8 @@ public class InstWhile extends Instruccion {
 
     @Override
     public void codeI(StringBuilder sb) {
-        sb.append("  block\n"); // Bloque exterior para salir del bucle
-        sb.append("    loop\n");  // Bloque interior para repetir el bucle
+        sb.append("  block\n");
+        sb.append("    loop\n");
         if (condicion != null) {
             ((Expresion)condicion).codeE(sb);
             sb.append("      i32.eqz\n");
@@ -90,7 +90,6 @@ public class InstWhile extends Instruccion {
         sb.append("    end\n"); 
         sb.append("  end\n");  
     }
-
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstWhile:");

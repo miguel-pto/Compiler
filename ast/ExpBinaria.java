@@ -25,7 +25,7 @@ public class ExpBinaria extends Expresion {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (izq != null) izq.simplifica();
         if (der != null) der.simplifica();
@@ -73,16 +73,21 @@ public class ExpBinaria extends Expresion {
     public void codeE(StringBuilder sb) {
         ((Expresion)izq).codeE(sb);
         ((Expresion)der).codeE(sb);
-        String tipoWasm = (izq.getTipo().tipoKind() == TipoKind.FLOAT) ? "f32" : "i32";
+        String tipoWasm;
+        if (izq.getTipo().tipoKind() == TipoKind.FLOAT) {
+            tipoWasm = "f32";
+        } else {
+            tipoWasm = "i32";
+        }
         switch (op) {
             case "+": sb.append("    " + tipoWasm + ".add\n"); break;
             case "-": sb.append("    " + tipoWasm + ".sub\n"); break;
             case "*": sb.append("    " + tipoWasm + ".mul\n"); break;
             case "/": 
-                if (tipoWasm.equals("i32")) sb.append("    i32.div_s\n"); // div con signo
+                if (tipoWasm.equals("i32")) sb.append("    i32.div_s\n"); 
                 else sb.append("    f32.div\n");
                 break;
-            case "%": sb.append("    i32.rem_s\n"); break; // solo para i32
+            case "%": sb.append("    i32.rem_s\n"); break;
             case "&&": sb.append("    i32.and\n"); break;
             case "||": sb.append("    i32.or\n"); break;
             case "==": sb.append("    " + tipoWasm + ".eq\n"); break;

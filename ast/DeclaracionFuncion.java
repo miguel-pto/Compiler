@@ -44,6 +44,7 @@ public class DeclaracionFuncion extends Instruccion {
         }
         vinculador.cierraBloque();
     }
+
     @Override
     public void simplifica() {
         if (tipoRetorno != null) tipoRetorno.simplifica();
@@ -95,12 +96,12 @@ public class DeclaracionFuncion extends Instruccion {
 
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
-        int desplParametros = 4;
+        int despParametros = 4;
         int profLocal = 1;
         for (Parametro p : parametros) {
-            desplParametros = p.calcularMemoria(desplParametros, profLocal);
+            despParametros = p.calcularMemoria(despParametros, profLocal);
         }
-        int maxAlcanzado = desplParametros; 
+        int maxAlcanzado = despParametros; 
         for (Nodo instr : cuerpo) {
             if (instr != null) maxAlcanzado = instr.calcularMemoria(maxAlcanzado, profLocal);
         }
@@ -111,7 +112,6 @@ public class DeclaracionFuncion extends Instruccion {
 
     @Override
     public void codeI(StringBuilder sb) {
-        // 1. Cabecera de la función (con resultado si no es void)
         sb.append("  (func $").append(nombre);
         if (tipoRetorno.tipoKind() != TipoKind.VOID) {
             if (tipoRetorno.tipoKind() == TipoKind.FLOAT) {
@@ -123,14 +123,12 @@ public class DeclaracionFuncion extends Instruccion {
         sb.append("\n");
 
         sb.append("    ;; Guardar enlace dinamico: Memoria[SP] = MP viejo\n");
-        sb.append("    global.get $SP\n"); // Dirección destino (Cima-1)
-        sb.append("    global.get $MP\n"); // Valor a guardar (Cima)
+        sb.append("    global.get $SP\n");
+        sb.append("    global.get $MP\n");
         sb.append("    i32.store\n");
-
-        sb.append("    ;; Establecer nuevo MP (Mark Pointer)\n");
+        sb.append("    ;; Establecer nuevo MP\n");
         sb.append("    global.get $SP\n");
         sb.append("    global.set $MP\n");
-
         sb.append("    ;; Reservar espacio en el Stack: SP = SP + tamanoMarco\n");
         sb.append("    global.get $SP\n");
         sb.append("    i32.const ").append(tamanoMarco).append("\n");
@@ -141,7 +139,7 @@ public class DeclaracionFuncion extends Instruccion {
             instr.codeI(sb);
         }
 
-        sb.append("    ;; Epílogo final\n");
+        sb.append("    ;; Epílogo\n");
         sb.append("    global.get $MP\n");
         sb.append("    global.set $SP\n");
         sb.append("    global.get $MP\n");

@@ -1,9 +1,14 @@
 var res : bool;
-var a:bool; var b:bool; var c:bool; var d:bool; var e:int; var f:int; var g:int;
+var a:bool; var b:bool; var c:bool; var d:bool;
 
 def main() : void as {
+    a = false;
+    b = false;
+    c = true;
+    d = false;
     res = a || b || c && d == false || true;
     res = a && b && c;
+    print(res);
 }
 
 

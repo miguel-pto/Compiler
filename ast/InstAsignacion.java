@@ -41,12 +41,10 @@ public class InstAsignacion extends Instruccion {
     public void chequea() {
         if (destino != null) destino.chequea();
         if (valor != null) valor.chequea();
-
         if (destino != null && valor != null) {
             Tipo tDestino = destino.getTipo();
             Tipo tValor = valor.getTipo();
             if (tDestino != null && tValor != null) {
-                // Regla Diapositiva 40
                 if (!tDestino.equals(tValor)) {
                     Main.gestor.errorSemantico(this.fila(), this.col(), "No se puede asignar " + tValor.tipoKind() + " a " + tDestino.tipoKind());
                 }
@@ -57,13 +55,8 @@ public class InstAsignacion extends Instruccion {
     @Override
     public void codeI(StringBuilder sb) {
         if (destino != null && valor != null) {
-            // 1. PRIMERO la dirección de destino (L-Value)
             destino.codeD(sb);
-            
-            // 2. DESPUÉS el valor a guardar (R-Value)
             ((Expresion)valor).codeE(sb);
-            
-            // 3. Guardamos según el tipo
             if (destino.getTipo().tipoKind() == TipoKind.FLOAT) {
                 sb.append("    f32.store\n");
             } else {
@@ -71,8 +64,6 @@ public class InstAsignacion extends Instruccion {
             }
         }
     }
-
-
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstAsignacion:");

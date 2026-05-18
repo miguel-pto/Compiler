@@ -22,7 +22,7 @@ public class ExpUnaria extends Expresion {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (operando != null) operando.simplifica();
     }
@@ -48,9 +48,6 @@ public class ExpUnaria extends Expresion {
                     } else {
                         Main.gestor.errorSemantico(this.fila(), this.col(), "'-' requiere un número.");
                     }
-                } 
-                else if (op.equals("&")) {
-                    this.setTipo(new TipoPuntero(tHijo, fila(), col()));
                 }
             }
         }

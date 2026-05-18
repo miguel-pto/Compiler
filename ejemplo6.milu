@@ -1,0 +1,15 @@
+def factorial(n : int, & p : *int) : void as {
+    if (n > 1) {
+        *p = *p * n;
+        factorial(n - 1, p);
+    } 
+}
+
+def main() : void as {
+    var control : *int;
+    control = new int;
+    *control = 1;
+    factorial(4, control);
+    print(*control);
+}
+

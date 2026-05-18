@@ -30,19 +30,14 @@ public class InstIf extends Instruccion {
 
     @Override
     public void vincular() {
-        // Vinculamos la condición en el ámbito donde está el IF
         if (condicion != null) {
             condicion.vincular();
         }
-
-        // Bloque IF: Creamos un nuevo ámbito 
         vinculador.abreBloque();
         for (Nodo instr : bloqueIf) {
             instr.vincular();
         }
         vinculador.cierraBloque(); 
-
-        // Bloque ELSE: Si existe, creamos otro ámbito independiente
         if (bloqueElse != null) {
             vinculador.abreBloque();
             for (Nodo instr : bloqueElse) {
@@ -86,22 +81,22 @@ public class InstIf extends Instruccion {
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
         int inicioIf = despActual;
-        int desplFinalIf = inicioIf;
+        int despFinalIf = inicioIf;
         if (bloqueIf != null) {
             for (Nodo n : bloqueIf) {
-                desplFinalIf = n.calcularMemoria(desplFinalIf, profundidad);
+                despFinalIf = n.calcularMemoria(despFinalIf, profundidad);
             }
         }
-        int desplFinalElse = inicioIf;
+        int despFinalElse = inicioIf;
         if (bloqueElse != null) {
             for (Nodo n : bloqueElse) {
-                desplFinalElse = n.calcularMemoria(desplFinalElse, profundidad);
+                despFinalElse = n.calcularMemoria(despFinalElse, profundidad);
             }
         }
-        if (desplFinalIf > desplFinalElse) {
-            return desplFinalIf;
+        if (despFinalIf > despFinalElse) {
+            return despFinalIf;
         } else {
-            return desplFinalElse;
+            return despFinalElse;
         }
     }
 

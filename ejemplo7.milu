@@ -1,0 +1,17 @@
+def calcular_mcd(a : int, b : int, & res : *int) : void as {
+    var resto : int;
+    var temporal : int;
+    while (b != 0) {
+        resto = a % b;
+        a = b;
+        b = resto;
+    }
+    *res = a;
+}
+
+def main() : void as {
+    var mcd : *int;
+    mcd = new int;
+    calcular_mcd(48, 18, mcd);
+    print(*mcd);
+}

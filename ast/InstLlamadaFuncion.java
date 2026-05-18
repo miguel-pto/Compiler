@@ -5,7 +5,7 @@ import asint.Main;
 
 public class InstLlamadaFuncion extends Instruccion {
     private String idFunc;
-    private List<Nodo> argumentos; // Lista de expresiones (valores pasados)
+    private List<Nodo> argumentos;
     private DeclaracionFuncion definicion;
 
     public InstLlamadaFuncion(String id, List<Nodo> args, int f, int c) {
@@ -14,7 +14,7 @@ public class InstLlamadaFuncion extends Instruccion {
         this.argumentos = args;
     }
 
-     @Override
+    @Override
     public NodeKind nodeKind() {
         return NodeKind.INSTRUCCION; 
     }
@@ -71,7 +71,7 @@ public class InstLlamadaFuncion extends Instruccion {
     }
 
     @Override
-    public int calcularMemoria(int c, int profundidad) {
+    public int calcularMemoria(int despActual, int profundidad) {
         int tamArgs = 4; 
         if (argumentos != null && definicion != null) {
             for (int i = 0; i < argumentos.size(); i++) {
@@ -83,10 +83,10 @@ public class InstLlamadaFuncion extends Instruccion {
                 }
             }
         }
-        if (tamArgs > c) {
+        if (tamArgs > despActual) {
             return tamArgs;
         }
-        return c;
+        return despActual;
     }
 
 
@@ -108,7 +108,7 @@ public class InstLlamadaFuncion extends Instruccion {
                 sb.append("    i32.store\n");
                 
                 if (pDef.getPorReferencia()) {
-                    desplazamiento += 4; // Un puntero/referencia siempre mide 4
+                    desplazamiento += 4;
                 } else {
                     desplazamiento += pDef.getTipo().getTam();
                 }

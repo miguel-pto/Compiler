@@ -55,7 +55,6 @@ public class InstRead extends Instruccion {
         }
     }
 
-
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstRead");
         destino.imprimir(indent + "    ");

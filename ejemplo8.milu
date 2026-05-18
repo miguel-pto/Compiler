@@ -1,0 +1,21 @@
+var matriz : array[3] de array[3] de int;
+
+def main() : void as {
+    var i : int;
+    var j : int;
+    var suma : int;
+    suma = 0;
+    for (i = 0; i < 3; i = i + 1) {
+        for (j = 0; j < 3; j = j + 1) {
+            matriz[i][j]= (i + 1) * (j + 1);
+        }
+    }
+    for (i = 0; i < 3; i = i + 1) {
+        for (j = 0; j < 3; j = j + 1) {
+            if (i != j) {
+                suma = suma + matriz[i][j];
+            }
+        }
+    }
+    print(suma);
+}

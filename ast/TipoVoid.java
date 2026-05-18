@@ -22,7 +22,7 @@ public class TipoVoid extends Tipo {
 
     @Override
     public void chequea() {
-        // No tiene restricciones internas
+
     }
 
     @Override

@@ -81,10 +81,8 @@ public class ExpLlamadaFuncion extends Expresion {
                 sb.append("    i32.const " + desplazamiento + "\n");
                 sb.append("    i32.add\n");
                 if (pDef.getPorReferencia()) {
-                    // Si es REF, metemos en la pila la dirección del argumento
                     ((Designador)arg).codeD(sb);
                 } else {
-                    // Si es VALOR, metemos en la pila el valor resultante
                     ((Expresion)arg).codeE(sb);
                 }
                 sb.append("    i32.store\n");

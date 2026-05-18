@@ -30,7 +30,7 @@ public class DeclaracionStruct extends Instruccion {
         vinculador.cierraBloque();
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (campos != null) {
             for (Nodo campo : campos) {
@@ -48,16 +48,16 @@ public class DeclaracionStruct extends Instruccion {
         }
     }
 
-        @Override
+    @Override
     public int calcularMemoria(int despActual, int profundidad) {
-        int desplInterno = 0;
+        int despInterno = 0;
         
         if (campos != null) {
             for (Nodo campo : campos) {
-                desplInterno = campo.calcularMemoria(desplInterno, profundidad);
+                despInterno = campo.calcularMemoria(despInterno, profundidad);
             }
         }
-        this.tamanoTotal = desplInterno;
+        this.tamanoTotal = despInterno;
         return despActual;
     }
 

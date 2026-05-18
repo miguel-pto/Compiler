@@ -1,7 +1,7 @@
 package ast;
 
 public class InstReturn extends Instruccion {
-    private Nodo valor; // Puede ser null si la función es 'void'
+    private Nodo valor;
 
     public InstReturn(Nodo v, int f, int c) {
         super(f, c);

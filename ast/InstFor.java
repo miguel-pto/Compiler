@@ -46,7 +46,7 @@ public class InstFor extends Instruccion {
         vinculador.cierraBloque();
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (ini != null) ini.simplifica();
         if (cond != null) cond.simplifica();
@@ -59,7 +59,6 @@ public class InstFor extends Instruccion {
     @Override
     public void chequea() {
         if (ini != null) ini.chequea();
-
         if (cond != null) {
             cond.chequea();
             if (cond.getTipo() != null && cond.getTipo().tipoKind() != TipoKind.BOOL) {
@@ -74,16 +73,16 @@ public class InstFor extends Instruccion {
 
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
-        int desplLocal = despActual;
-        if (ini != null) desplLocal = ini.calcularMemoria(desplLocal, profundidad);
-        if (cond != null) desplLocal = cond.calcularMemoria(desplLocal, profundidad);
-        if (iteracion != null) desplLocal = iteracion.calcularMemoria(desplLocal, profundidad);
+        int despLocal = despActual;
+        if (ini != null) despLocal = ini.calcularMemoria(despLocal, profundidad);
+        if (cond != null) despLocal = cond.calcularMemoria(despLocal, profundidad);
+        if (iteracion != null) despLocal = iteracion.calcularMemoria(despLocal, profundidad);
         if (cuerpo != null) {
             for (Nodo n : cuerpo) {
-                desplLocal = n.calcularMemoria(desplLocal, profundidad);
+                despLocal = n.calcularMemoria(despLocal, profundidad);
             }
         }
-        return desplLocal;
+        return despLocal;
     }
 
     @Override
@@ -110,7 +109,6 @@ public class InstFor extends Instruccion {
         sb.append("    end\n");
         sb.append("  end\n");
     }
-
 
     public void imprimir(String indent) {
         System.out.println(indent + "└── InstFor:");

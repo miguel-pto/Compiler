@@ -10,7 +10,7 @@ public class InstPrint extends Instruccion {
         this.expresion = e;
     }
 
-        @Override
+    @Override
     public NodeKind nodeKind() {
         return NodeKind.INSTRUCCION;
     }
@@ -22,7 +22,7 @@ public class InstPrint extends Instruccion {
         }
     }
 
-        @Override
+    @Override
     public void simplifica() {
         if (expresion != null) {
             expresion.simplifica();

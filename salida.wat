@@ -25,10 +25,15 @@
     global.set $MP
     ;; Reservar espacio en el Stack: SP = SP + tamanoMarco
     global.get $SP
-    i32.const 12
+    i32.const 16
     i32.add
     global.set $SP
     global.get $MP
+    i32.const 12
+    i32.add
+    i32.const 0
+    i32.store
+    global.get $MP
     i32.const 4
     i32.add
     i32.const 0
@@ -39,7 +44,7 @@
     i32.const 4
     i32.add
     i32.load
-    i32.const 5
+    i32.const 3
     i32.lt_s
       i32.eqz
       br_if 1
@@ -54,20 +59,41 @@
     i32.const 8
     i32.add
     i32.load
-    i32.const 2
+    i32.const 3
     i32.lt_s
       i32.eqz
       br_if 1
+    ;; --- Acceso a Array (codeD) ---
+    ;; --- Acceso a Array (codeD) ---
+    i32.const 0
     global.get $MP
     i32.const 4
     i32.add
     i32.load
-    call $print
+    i32.const 12
+    i32.mul
+    i32.add
     global.get $MP
     i32.const 8
     i32.add
     i32.load
-    call $print
+    i32.const 4
+    i32.mul
+    i32.add
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    i32.const 1
+    i32.add
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 1
+    i32.add
+    i32.mul
+    i32.store
     global.get $MP
     i32.const 8
     i32.add
@@ -94,6 +120,105 @@
       br 0
     end
   end
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.const 0
+    i32.store
+  block
+    loop
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    i32.const 3
+    i32.lt_s
+      i32.eqz
+      br_if 1
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.const 0
+    i32.store
+  block
+    loop
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 3
+    i32.lt_s
+      i32.eqz
+      br_if 1
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.ne
+    if
+    global.get $MP
+    i32.const 12
+    i32.add
+    global.get $MP
+    i32.const 12
+    i32.add
+    i32.load
+    ;; --- Acceso a Array (codeD) ---
+    ;; --- Acceso a Array (codeD) ---
+    i32.const 0
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    i32.const 12
+    i32.mul
+    i32.add
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 4
+    i32.mul
+    i32.add
+    i32.load
+    i32.add
+    i32.store
+    end
+    global.get $MP
+    i32.const 8
+    i32.add
+    global.get $MP
+    i32.const 8
+    i32.add
+    i32.load
+    i32.const 1
+    i32.add
+    i32.store
+      br 0
+    end
+  end
+    global.get $MP
+    i32.const 4
+    i32.add
+    global.get $MP
+    i32.const 4
+    i32.add
+    i32.load
+    i32.const 1
+    i32.add
+    i32.store
+      br 0
+    end
+  end
+    global.get $MP
+    i32.const 12
+    i32.add
+    i32.load
+    call $print
     ;; Epílogo final
     global.get $MP
     global.set $SP
@@ -102,7 +227,7 @@
     global.set $MP
   )
   (func $init_global
-    i32.const 0
+    i32.const 36
     global.set $SP
     global.get $SP
     global.set $MP
