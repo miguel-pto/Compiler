@@ -28,12 +28,6 @@ public class DesignadorArray extends Designador {
     }
 
     @Override
-    public void simplifica() {
-        if (designador != null) designador.simplifica();
-        if (indice != null) indice.simplifica();
-    }
-
-    @Override
     public void chequea() {
         designador.chequea();
         indice.chequea();

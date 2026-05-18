@@ -41,12 +41,6 @@ public class DeclaracionVariable extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (tipo != null) tipo.simplifica();
-        if (valorInicial != null) valorInicial.simplifica();
-    }
-
-    @Override
     public void chequea() {
         if (tipo != null) {
             tipo.chequea();

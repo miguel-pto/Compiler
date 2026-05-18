@@ -21,11 +21,6 @@ public class InstReturn extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (valor != null) valor.simplifica();
-    }
-
-    @Override
     public void chequea() {
         if (valor != null) {
             valor.chequea();

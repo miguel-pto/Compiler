@@ -20,11 +20,6 @@ public class TipoBool extends Tipo {
     }
 
     @Override
-    public void simplifica() {
-
-    }
-
-    @Override
     public void chequea() {
 
     }

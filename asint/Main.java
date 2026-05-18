@@ -34,9 +34,6 @@ public class Main {
      } else {
          System.out.println("\n[ÉXITO] Vinculación completada.");
 
-         System.out.println("\n=== INICIANDO FASE DE SIMPLIFICACIÓN ===");
-         arbol.simplifica();
-
          System.out.println("\n=== INICIANDO FASE DE TIPADO ===");
          arbol.chequea();
      }

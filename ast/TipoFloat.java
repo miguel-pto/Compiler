@@ -14,11 +14,7 @@ public class TipoFloat extends Tipo {
     public void vincular() {
 
     }
-    @Override
-    public void simplifica() {
-
-    }
-
+    
     @Override
     public void chequea() {
 

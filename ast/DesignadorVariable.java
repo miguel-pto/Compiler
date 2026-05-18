@@ -22,11 +22,6 @@ public class DesignadorVariable extends Designador {
     }
 
     @Override
-    public void simplifica() {
-        
-    }
-
-    @Override
     public void chequea() {
         if (definicion == null) {
             this.setTipo(null);
@@ -56,7 +51,7 @@ public class DesignadorVariable extends Designador {
         if (definicion instanceof Parametro) {
             Parametro p = (Parametro) definicion;
             if (p.getPorReferencia()) {
-                sb.append("    i32.load\n"); // Seguimos el puntero
+                sb.append("    i32.load\n");
             }
         }
     }

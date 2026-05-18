@@ -23,13 +23,6 @@ public class InstRead extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (destino != null) {
-            destino.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (destino != null) {
             destino.chequea();

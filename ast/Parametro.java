@@ -18,8 +18,8 @@ public class Parametro extends Nodo {
     }
 
     @Override
-    public int calcularMemoria(int despInicio, int profundidad) {
-        this.desplazamiento = despInicio;
+    public int calcularMemoria(int despActual, int profundidad) {
+        this.desplazamiento = despActual;
         this.pa = profundidad;
         
         int tamano;
@@ -28,7 +28,7 @@ public class Parametro extends Nodo {
         } else {
             tamano = getTipo().getTam();
         }
-        return despInicio + tamano;
+        return despActual + tamano;
     }
 
     public int getDesplazamiento() { 
@@ -50,13 +50,6 @@ public class Parametro extends Nodo {
             tipo.vincular();
         }
         vinculador.insertaId(id, this);
-    }
-
-    @Override
-    public void simplifica() {
-        if (tipo != null) {
-            tipo.simplifica();
-        }
     }
 
     @Override

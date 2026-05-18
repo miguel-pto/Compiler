@@ -26,11 +26,6 @@ public class DesignadorCampo extends Designador {
     }
 
     @Override
-    public void simplifica() {
-        if (registro != null) registro.simplifica();
-    }
-
-    @Override
     public void chequea() {
         registro.chequea();
 

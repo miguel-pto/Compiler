@@ -23,13 +23,6 @@ public class InstPrint extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (expresion != null) {
-            expresion.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (expresion != null) {
             expresion.chequea();

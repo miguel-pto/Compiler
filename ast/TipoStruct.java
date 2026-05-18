@@ -34,11 +34,6 @@ public class TipoStruct extends Tipo {
     }
 
     @Override
-    public void simplifica() {
-
-    }
-
-    @Override
     public void chequea() {
         
     }

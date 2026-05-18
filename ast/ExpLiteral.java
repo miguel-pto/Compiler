@@ -17,11 +17,6 @@ public class ExpLiteral extends Expresion {
     }
 
     @Override
-    public void simplifica() {
-        
-    }
-
-    @Override
     public void chequea() {
         if (tipo != null) {
             tipo.chequea();

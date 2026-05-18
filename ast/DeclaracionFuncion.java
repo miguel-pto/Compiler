@@ -46,13 +46,6 @@ public class DeclaracionFuncion extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (tipoRetorno != null) tipoRetorno.simplifica();
-        for (Parametro p : parametros) p.simplifica();
-        for (Nodo instr : cuerpo) instr.simplifica();
-    }
-
-    @Override
     public void chequea() {
         for (Parametro p : parametros) p.chequea();
         if (tipoRetorno != null) tipoRetorno.chequea();
@@ -108,7 +101,6 @@ public class DeclaracionFuncion extends Instruccion {
         this.tamanoMarco = maxAlcanzado;
         return despActual;
     }
-
 
     @Override
     public void codeI(StringBuilder sb) {

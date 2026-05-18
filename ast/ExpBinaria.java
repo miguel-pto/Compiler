@@ -26,12 +26,6 @@ public class ExpBinaria extends Expresion {
     }
 
     @Override
-    public void simplifica() {
-        if (izq != null) izq.simplifica();
-        if (der != null) der.simplifica();
-    }
-
-    @Override
     public void chequea() {
         if (izq != null && der != null) {
             izq.chequea();

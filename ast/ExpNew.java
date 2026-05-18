@@ -20,14 +20,6 @@ public class ExpNew extends Expresion {
         }
     }
 
-
-    @Override
-    public void simplifica() {
-        if (tipoReservado != null) {
-            tipoReservado.simplifica();
-        }
-    }
-
     @Override
     public void chequea() {
         if (tipoReservado != null) {

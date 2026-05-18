@@ -47,16 +47,6 @@ public class InstFor extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (ini != null) ini.simplifica();
-        if (cond != null) cond.simplifica();
-        if (iteracion != null) iteracion.simplifica();
-        if (cuerpo != null) {
-            for (Nodo n : cuerpo) n.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (ini != null) ini.chequea();
         if (cond != null) {

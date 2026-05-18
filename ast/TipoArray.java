@@ -28,12 +28,6 @@ public class TipoArray extends Tipo {
     }
 
     @Override
-    public void simplifica() {
-        if (this.tam != null) this.tam.simplifica();
-        if (this.tipoElementos != null) this.tipoElementos.simplifica();
-    }
-
-    @Override
     public void chequea() {
         if (this.tipoElementos != null) {
             this.tipoElementos.chequea();

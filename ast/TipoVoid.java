@@ -14,12 +14,7 @@ public class TipoVoid extends Tipo {
     public void vincular() {
         
     }
-
-    @Override
-    public void simplifica() {
-        // Ya es tipo base
-    }
-
+    
     @Override
     public void chequea() {
 

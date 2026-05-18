@@ -29,13 +29,6 @@ public class Programa extends Nodo {
     }
 
     @Override
-    public void simplifica() {
-        for (Nodo i : instrucciones) {
-            i.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         for (Nodo i : instrucciones) {
             i.chequea();

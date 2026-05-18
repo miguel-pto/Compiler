@@ -25,13 +25,6 @@ public class TipoPuntero extends Tipo {
     }
 
     @Override
-    public void simplifica() {
-        if (tipoApuntado != null) {
-            tipoApuntado.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (tipoApuntado != null) {
             tipoApuntado.chequea();

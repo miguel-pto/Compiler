@@ -22,7 +22,6 @@ public abstract class Nodo {
     }
     public abstract NodeKind nodeKind();
     public abstract void vincular();
-    public abstract void simplifica();
     public abstract void chequea();
     public int calcularMemoria(int despActual, int profundidad) {
         return despActual;

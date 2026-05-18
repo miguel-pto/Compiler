@@ -23,13 +23,6 @@ public class InstFree extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (puntero != null) {
-            puntero.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (puntero != null) {
             puntero.chequea();

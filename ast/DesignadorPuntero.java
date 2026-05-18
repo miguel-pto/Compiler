@@ -23,11 +23,6 @@ public class DesignadorPuntero extends Designador {
     }
 
     @Override
-    public void simplifica() {
-        if (puntero != null) puntero.simplifica();
-    }
-
-    @Override
     public void chequea() {
         puntero.chequea();
         if (puntero.getTipo() == null) {

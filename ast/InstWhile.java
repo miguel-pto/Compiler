@@ -38,14 +38,6 @@ public class InstWhile extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (condicion != null) condicion.simplifica();
-        if (cuerpo != null) {
-            for (Nodo instr : cuerpo) instr.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (condicion != null) {
             condicion.chequea();
@@ -63,13 +55,13 @@ public class InstWhile extends Instruccion {
 
     @Override
     public int calcularMemoria(int despActual, int profundidad) {
-        int desplLocal = despActual;
+        int despLocal = despActual;
         if (cuerpo != null) {
             for (Nodo instr : cuerpo) {
-                desplLocal = instr.calcularMemoria(desplLocal, profundidad);
+                despLocal = instr.calcularMemoria(despLocal, profundidad);
             }
         }
-        return desplLocal;
+        return despLocal;
     }
 
     @Override

@@ -31,15 +31,6 @@ public class DeclaracionStruct extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (campos != null) {
-            for (Nodo campo : campos) {
-                campo.simplifica();
-            }
-        }
-    }
-
-    @Override
     public void chequea() {
         if (campos != null) {
             for (Nodo campo : campos) {

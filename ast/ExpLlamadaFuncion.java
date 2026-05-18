@@ -40,13 +40,6 @@ public class ExpLlamadaFuncion extends Expresion {
     }
 
     @Override
-    public void simplifica() {
-        if (argumentos != null) {
-            for (Nodo arg : argumentos) arg.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (argumentos != null) {
             for (Nodo arg : argumentos) arg.chequea();

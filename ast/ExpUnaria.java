@@ -23,11 +23,6 @@ public class ExpUnaria extends Expresion {
     }
 
     @Override
-    public void simplifica() {
-        if (operando != null) operando.simplifica();
-    }
-
-    @Override
     public void chequea() {
         if (operando != null) {
             operando.chequea();

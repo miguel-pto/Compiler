@@ -48,17 +48,6 @@ public class InstIf extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (condicion != null) condicion.simplifica();
-        if (bloqueIf != null) {
-            for (Nodo n : bloqueIf) n.simplifica();
-        }
-        if (bloqueElse != null) {
-            for (Nodo n : bloqueElse) n.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (condicion != null) {
             condicion.chequea();

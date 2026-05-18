@@ -28,16 +28,6 @@ public class InstAsignacion extends Instruccion {
     }
 
     @Override
-    public void simplifica() {
-        if (destino != null) {
-            destino.simplifica();
-        }
-        if (valor != null) {
-            valor.simplifica();
-        }
-    }
-
-    @Override
     public void chequea() {
         if (destino != null) destino.chequea();
         if (valor != null) valor.chequea();

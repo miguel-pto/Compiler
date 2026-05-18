@@ -83,22 +83,22 @@ A ::= ACCESO:d ASIG E0:exp
       {: RESULT = new InstAsignacion((Designador)d, exp, parser.fila(0), parser.columna(0)); :};
 
 ACCESO ::= ACCESO:a PUNTO IDENTIFICADOR:id
-	{: RESULT = new DesignadorCampo((Designador)a, id, parser.fila(0), parser.columna(0)); :}
+	    {: RESULT = new DesignadorCampo((Designador)a, id, parser.fila(0), parser.columna(0)); :}
       | ACCESO_PUNTERO:a
       {: RESULT = a; :};
 
 ACCESO_PUNTERO ::= MULT ACCESO_PUNTERO:a 
       {: RESULT = new DesignadorPuntero((Designador)a, parser.fila(0), parser.columna(0)); :}
-	| ACCESO_ARRAY:a
-	{: RESULT = a; :};
+	    | ACCESO_ARRAY:a
+	    {: RESULT = a; :};
 
 ACCESO_ARRAY ::= ACCESO_ARRAY:a CAP E0:idx CCIERRE
-	{: RESULT = new DesignadorArray((Designador)a, idx, parser.fila(0), parser.columna(0)); :}
-	| ACCESO_SIMPLE:a
-	{: RESULT = a; :};
+      {: RESULT = new DesignadorArray((Designador)a, idx, parser.fila(0), parser.columna(0)); :}
+      | ACCESO_SIMPLE:a
+      {: RESULT = a; :};
 
 ACCESO_SIMPLE ::= IDENTIFICADOR:id
-	{: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :};
+      {: RESULT = new DesignadorVariable(id, parser.fila(0), parser.columna(0)); :};
 
 //funciones
 FUNDEC ::= DEF IDENTIFICADOR:id PAP P:params PCIERRE COLON T_FUNCT:ret AS BAP BLOQUE:bloque BCIERRE
